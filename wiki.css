@@ -75,10 +75,9 @@ a.disabled {
 .icon{font-size:28px;display:none;}
 @media screen and (max-width: 850px) {
   .div1{height:50px;width:50px;float:left;background:rgb(226, 94, 83);color:white;font-size:16px;}
- #welcome{margin-left:5px;margin-top:10px;}
-
   #div2{margin-left:50px;width:calc(100% - 50px);}
  #div3{margin-left:1%;margin-right:1%;width:98%;}
+ #welcome{margin-left:5px;margin-top:10px;}
   #div11{position:absolute;margin-top:10px;margin-left:35%;display:none;}
   .div1 a {display: none;}
   .div1 input,.div1 select {display: none;}
