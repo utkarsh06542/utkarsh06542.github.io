@@ -1,0 +1,61 @@
+<html>
+<head>
+<link rel="stylesheet" href="wiki.css">
+</head>
+<body>
+<div id="main">
+<div class="div1" id="myTopnav">
+<div id="div11">
+<script>var val="button";var val1="title";</script>
+<form action="javascript:wikifirst(val);">
+<h2><u>Search Area</u></h2>
+<b>Title :</b><br> <input type="text" id="title" name="title" required><br><br>
+<b>Language :</b><br><select id="mySelect" >
+  <option value="en" selected>English</option>
+  <option value="fr">Fran&ccedil;ais</option>
+  <option value="es">Espa&ntilde;ol</option>
+  <option value="ja">&#26085;&#26412;&#35486;</option>
+  <option value="zh-min-nan">&#20013;&#25991;</option>
+  <option value="arz">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</option>
+  <option value="hi">&#2361;&#2367;&#2344;&#2381;&#2342;&#2368;</option>
+  <option value="de">Deutsch</option>
+  <option value="ru">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</option>
+  <option value="sv">Svenska</option>
+</select><br><br>
+  <input type="submit" id="submit" value="Fetch">
+</form>
+</div>
+  <a href="javascript:void(0);"  class="icon" onclick="myFunction()">&#9776;</a>
+</div>
+<div id="div2"><center>My Wikipedia !</center></div>
+<div id="div3">
+<div id="welcome">
+<h3>Created by Utkarsh Prabhakar.</h3>
+<h4>How to use :</h4>
+Write in the "Search Area" :<br>
+<ol>
+<li>The "Title" of the article you want ot search.</li>
+<li>The language in which you want to read the article</li>
+</ol>
+<h4>Tested for the following titles : </h4>
+<ul>
+<li>"Delhi" , "London" , "Mumbai" </li>
+<li>"Earth" , "Pluto"</li>
+<li>"Usa" , "India"</li>
+<li>"Wikipedia"</li>
+<li> "Bill gates"</li>
+<li>"honolulu" , "shakira"</li>
+</ul>
+<h4>Additional features:</h4>
+<ul>
+<li>Animated Loading symbol installed.</li>
+<li>Can load contents from url/links in the given page/article.</li>
+<li>Outputs error message in the user specified language.</li>
+<li>Redirects to the best suitable title (if possible).</li>
+</ul>
+</div>
+</div>
+</div>
+<script src="wiki.js"></script>
+</body>
+</html>
