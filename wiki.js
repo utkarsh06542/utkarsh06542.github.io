@@ -1,4 +1,4 @@
-// Code for running Hamburger icon :starts
+// Code for running Hamburger icon :STARTS
 function hamburgerIcon() {
     var x = document.getElementById("leftSidebar");
     if (x.className === "left-sidebar") {
@@ -8,7 +8,7 @@ function hamburgerIcon() {
         x.className = "left-sidebar";
     }
 }
-// Code for running Hamburger icon : ends
+// Code for running Hamburger icon : ENDS
 
 /** function to establish connection with Wikipedia's server **/
 function connectLangWiki(parameter){
@@ -29,7 +29,7 @@ function connectLangWiki(parameter){
             title=document.getElementById("title").value;passTitle=title;
         }
         
-        /** Code to make the first letter of the title in Uppercase : STARTS**/
+        /** Code to make the first letter of each word in the title in Uppercase : STARTS **/
         var splitTitle=title.split(" ");
         var resultTitle="";
         for(var i=0;i<splitTitle.length;i++){
@@ -38,7 +38,7 @@ function connectLangWiki(parameter){
             if(i != (splitTitle.length -1)){resultTitle += " ";}
         }
         if(parameter=="searchForm"){title=resultTitle;passTitle=title;}
-        /** Code to make the first letter of the title in Uppercase : ENDS**/
+        /** Code to make the first letter of each word in the title in Uppercase : ENDS **/
         
         var lang=document.getElementById("langSelect").value;     //recives and store language chosen by user
         
@@ -51,7 +51,7 @@ function connectLangWiki(parameter){
                 if(myObj.parse){
                     var object=myObj.parse.langlinks;
                     for(var i=0;i<object.length;i++){
-                            if(object[i].lang==lang){
+                            if(object[i].lang==lang){   //matches the user specified language with the language links obtained through wikipedia
                             urltext=object[i].url;
                             break;
                             }
@@ -72,11 +72,11 @@ function connectLangWiki(parameter){
         //url required to get content of article from wikipedia in JSON format
         var url="https://en.wikipedia.org/w/api.php?origin=*&action=parse&format=json&prop=langlinks&page="+title+"&callback=?";
         
-        //xmlhttprequest object for recieveing language links for the article : starts
+        //xmlhttprequest object for recieveing language links for the article : STARTS
         xmlhttp.open("GET", url, true);
         xmlhttp.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
         xmlhttp.send();
-        //xmlhttprequest object for recieveing language links for the article : ends
+        //xmlhttprequest object for recieveing language links for the article : ENDS
         /** xmlHttpRequest object creation an functions : ENDS **/
 }
 
@@ -91,7 +91,7 @@ function connectContentWiki(parameter,passTitle,lang){
         var title=parameter; //takes parameter as title of the article
 
         /** When no link to the given article is found, webpage returns error message in user specified languaged **/
-        //error message content in differnet languages : starts
+        //error message content in differnet languages : STARTS
         var errormess={
         "hi":"&#2340;&#2381;&#2352;&#2369;&#2335;&#2367;: &#2311;&#2360; &#2349;&#2366;&#2359;&#2366; &#2350;&#2375;&#2306; &#2342;&#2367;&#2319; &#2327;&#2319; &#2357;&#2367;&#2359;&#2351; &#2346;&#2352; &#2357;&#2367;&#2325;&#2367;&#2346;&#2368;&#2337;&#2367;&#2351;&#2366; &#2325;&#2379; &#2325;&#2379;&#2312; &#2349;&#2368; &#2346;&#2381;&#2352;&#2366;&#2360;&#2306;&#2327;&#2367;&#2325; &#2354;&#2375;&#2326; &#2344;&#2361;&#2368;&#2306; &#2350;&#2367;&#2354;&#2366;&#2404;",
         "en":"Error : Wikipedia could not find any relevant article on the given topic in this language.",
@@ -103,9 +103,9 @@ function connectContentWiki(parameter,passTitle,lang){
         "de":"Fehler: Wikipedia konnte in dieser Sprache keinen relevanten Artikel zum Thema finden.",
         "ru":"&#1054;&#1096;&#1080;&#1073;&#1082;&#1072;: &#1042;&#1080;&#1082;&#1080;&#1087;&#1077;&#1076;&#1080;&#1103; &#1085;&#1077; &#1089;&#1084;&#1086;&#1075;&#1083;&#1072; &#1085;&#1072;&#1081;&#1090;&#1080; &#1089;&#1086;&#1086;&#1090;&#1074;&#1077;&#1090;&#1089;&#1090;&#1074;&#1091;&#1102;&#1097;&#1091;&#1102; &#1089;&#1090;&#1072;&#1090;&#1100;&#1102; &#1087;&#1086; &#1076;&#1072;&#1085;&#1085;&#1086;&#1084;&#1091; &#1074;&#1086;&#1087;&#1088;&#1086;&#1089;&#1091; &#1085;&#1072; &#1101;&#1090;&#1086;&#1084; &#1103;&#1079;&#1099;&#1082;&#1077;.",
         "sv":"Fel: Wikipedia kunde inte hitta n&aring;gon relevant artikel om givet &auml;mne p&aring; detta spr&aring;k."};
-        //error message content : ends
+        //error message content : ENDS
         
-        if(passTitle!=" "){title=passTitle;}
+        if(passTitle!=" "){title=passTitle;} //if connectLangWiki() was able to get a link for the article title in user specified language then variable "title" takes its vlue
         
         var xmlhttp = new XMLHttpRequest();     // xmlHttpRequest object created
             xmlhttp.onreadystatechange = function() {
@@ -113,7 +113,7 @@ function connectContentWiki(parameter,passTitle,lang){
                         /** This block is executed when successfull connection is established **/
                         myObj =JSON.parse((this.responseText).slice(5,-1));
                         if(txt=myObj.error){
-                                /** This block is activate when an error message is sent from wikipedia in response to xmlhttprequest object**/
+                                /** This block is activated when an error message is sent from wikipedia in response to xmlhttprequest object**/
                                 document.getElementById("article-title").innerHTML = "<center>Error !</center>";	
                                 document.getElementById("article-content").innerHTML = "<center><div style=\"margin-top:calc((100vh - 100px) / 2);font-size:20px;\">"+errormess[lang]+" !<br>Please try to search something else .</div></center>";}
                         else{ 
@@ -130,10 +130,10 @@ function connectContentWiki(parameter,passTitle,lang){
                                     document.getElementById("article-content").innerHTML +="<div class=\"loading\"><div class=\"rect1\"></div><div class=\"rect2\"></div><div class=\"rect3\"></div><div class=\"rect4\"></div><div class=\"rect5\"></div></div>";
                                     connectContentWiki(temp2,temp2,lang);
                             }
-                            //code to redirect ends here
+                            //code to redirect ENDS here
                             
                             /** Removal of images, tables, references etc. form the recieved contents from xmlhttprequest object**/
-                            //to remove images, tables, edit tags and references : starts
+                            //to remove images, tables, edit tags and references : STARTS
                             var image=document.getElementById("article-content").getElementsByTagName("img");
                             var table=document.getElementById("article-content").getElementsByTagName("table");
                             var references=document.getElementById("article-content").getElementsByClassName("references");
@@ -171,7 +171,7 @@ function connectContentWiki(parameter,passTitle,lang){
                             for (i = 0; i < bracketref.length; i++) {
                                bracketref[i].style.display = "none";
                             }
-                            //to remove images, tables, edit tags and references : ends
+                            //to remove images, tables, edit tags and references : ENDS
                     }
                 }
         };
