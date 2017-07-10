@@ -1,5 +1,4 @@
 # utkarsh06542.github.io
-Made for wikipedia internship screening task.
 
 Purpose of this webpage is to display contents of article (through retriving data from wikipedia.org) in ten different laguages.
 
