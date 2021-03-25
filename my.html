@@ -1,20 +1,37 @@
 <html>
-  <body>
+	<head>
+		<title>
+			Utkarsh
+		</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+   crossorigin=""/>
+<!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin=""></script>
+		<style>
 
-    <h2>Redirect to a Webpage</h2>
-    <p>The replace() method replaces the current document with a new one:</p>
+html, body{
+    height: 100%;
+    margin:0;
+}
+#map { width:600px; height: 400px; }
+		</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	</head>
+	<body>
+		add
+ <div id="map"></div>
+<script>
+var map = L.map('map', {
+    crs: L.CRS.Simple,
+    minZoom: 0
+});
+var bounds = [[0,0], [1000,1000]];
+var image = L.imageOverlay('https://www.orangesmile.com/common/img_country_maps/india-map-2.jpg', bounds).addTo(map);
+map.fitBounds(bounds);
 
-    <button onclick="myFunction()">Replace document</button>
-    <button onclick="myFunction1()">Replace document 1</button>
-
-    <script>
-      function myFunction() {
-        location.replace("https://codepen.io/utkbokarogeo/full/MWbPLgL")
-      }
-      function myFunction() {
-        location.replace("https://codepen.io/PJCHENder/full/MpdRqV")
-      }
-    </script>
-
-  </body>
-</html> 
+</script>
+	</body>
+</html>
