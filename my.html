@@ -30,7 +30,7 @@ var map = L.map('map', {
     maxZoom: 2,
 });
 var bounds = [[0,0], [1000,1000]];
-var image = L.imageOverlay('india_auto_x2.png', bounds).addTo(map);
+var image = L.imageOverlay('https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/India_physical_map.svg/1639px-India_physical_map.svg.png', bounds).addTo(map);
 map.fitBounds(bounds);
 
 var sol = L.latLng([ 330, 150 ]);
