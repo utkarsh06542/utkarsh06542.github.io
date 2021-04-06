@@ -27,8 +27,9 @@
 				padding:0px;
 				width: 100%;
 				height:100%;
-				background-color:#c5dbe0;
-				z-index:10;
+				background-color: rgba(197, 219, 224,0.8);
+				cursor: pointer;
+				z-index:30;
 			  	/*overflow: hidden;*/
 			}
 			#playbtn {
@@ -39,8 +40,6 @@
 				transform: translate(-50%, -50%);
 				width: 14vmin;
 				height: 14vmin;
-				z-index:15;
-				cursor:pointer;	
 			}
 			#map { 
 				display:block;
@@ -65,19 +64,67 @@
 			}
 			#questiontext{
 				position: absolute;
+				margin: 0 auto;
+				padding: 0;
+				width: 100%;
 				left:50%;
 				top: 50%;
 				transform: translate(-50%,-50%);
+				text-align: center;
 				font-family :"Arial Black", Gadget, sans-serif;
-				font-size:4vmin;
+				font-size:5vmin;
 			}
-			
+			#timer{
+				position: absolute;
+				display: none;
+				padding: 2px;
+				bottom:7%;
+				right: 0px;
+				width: auto;
+				/*height: 30px;*/
+				font-family :"Arial", Gadget, sans-serif;
+				font-size:4vmin;
+				background-color:  #5998a6;
+				z-index: 50;
+			}
+			#gameover {
+				display:none;
+				position:absolute;
+				margin: 0 auto;
+				padding:0px;
+				width: 100%;
+				height:100%;
+				background-color: rgba(197, 219, 224,0.8);
+				z-index:30;
+			  	/*overflow: hidden;*/
+			}
+			#gameovertext{
+				position: absolute;
+				margin: 0 auto;
+				padding: 0;
+				width: auto;
+				left:50%;
+				top: 50%;
+				transform: translate(-50%,-50%);
+				text-align: center;
+				font-family :"Arial Black", Gadget, sans-serif;
+				font-size:8vmin;
+				z-index: 30;
+			}
+			#score{
+				font-size:5vmin;
+				font-family :"Arial", Gadget, sans-serif;
+			}
+			#duration{
+				font-size:5vmin;
+				font-family :"Arial", Gadget, sans-serif;
+			}
 		</style>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	</head>
 	<body>
 
-		<div id="beginscene">
+		<div id="beginscene" onclick="off()">
 			<div id="playbtn">
 				<svg viewBox="0 0 26 26">
 				  <polygon class="play-btn__svg" points="9.33 6.69 9.33 19.39 19.3 13.04 9.33 6.69"/>
@@ -90,6 +137,24 @@
 		<div id="map"></div>
 		<div id="questionarea">
 			<b><span id="questiontext">My question</span></b>
+		</div>
+		<div id="timer">
+			<span id="mins">00:</span> <span id="seconds">00</span>
+		</div>
+		<div id="gameover">
+			<b>
+				<div id="gameovertext">
+					<u><b>Game Over</b></u>
+					<br><br>
+					<span id="score">Score : </span>
+					<br>
+					<span id="duration">Duration : </span>
+				</div>
+			</b>
+			<br><!-- 
+			<b> Score : </b> <span id="gameovertext">Game Over</span>  
+			<br>
+			<b> Duration : </b> <span id="gameovertext">Game Over</span>   -->
 		</div>
 		<script>
 
@@ -108,8 +173,8 @@
 
 
 
-			var sol = L.latLng([ 330, 150 ]);
-			L.marker(sol).addTo(map).bindPopup('Mumbai');
+			// var sol = L.latLng([ 330, 150 ]);
+			// L.marker(sol).addTo(map).bindPopup('Mumbai');
 
 			var southWest = L.latLng(0,0),
 			northEast = L.latLng(1000, 1000);
@@ -117,7 +182,7 @@
 
 			map.setMaxBounds(bounds);
 			map.on('drag', function() {
-			    map.panInsideBounds(bounds, { animate: true });
+			    map.panInsideBounds(bounds, { animate: false });
 			});
 
 			// function onEachFeature(feature, layer) {
@@ -162,7 +227,7 @@
 					        "coordinates": [400,400]
 					    },
 					    "properties": {
-					        "name": "Patna",
+					        "name": "Corbett National Park",
 					        "popupContent": "This is where I go!"
 					    },
 			    	}
@@ -230,26 +295,60 @@
 				});
 			};
 
+			function startTimer(){
+		  		timex = setTimeout(function(){
+	      		seconds++;
+			    if(seconds >59)
+			    	{
+		    			seconds=0;mins++;                
+					    if(mins<10)
+					    {                     
+					      $("#mins").text('0'+mins+':');
+					  	}       
+				       	else if(mins<=59)
+				       	{
+				       		$("#mins").text(mins+':')
+				       	}
+				       	else{
+				       		mins=0;
+				       		// Time limit exceed : Game Over : Genrate end signal
+				       	}
+	              	}    
+			    if(seconds <10) 
+			    {
+			      $("#seconds").text('0'+seconds);
+			  	} 
+		      	else 
+		      	{
+			      $("#seconds").text(seconds);
+			    }
+	      		startTimer();
+			  	},999);
+			};
+
 			var currentQuestion=0;
 			var questionListLength;
 			var questionList = shuffle(Array.from(out["name"]));
 			var questionListLength = questionList.length;
 			var correctTally=0;
 			var wrongAttempts=0;
+			var hours =0;
+			var mins =0;
+			var seconds =0;
 
-			$("#playbtn").click(function(){
-				// console.log(questionList[0]);
-				$('#questionarea').css('display','block');
+			function off() {
+			  $('#questionarea').css('display','block');
 			    $('#beginscene').fadeOut(250, function() {
 					$('#map').css('display','block');
 					let currentq = questionList[currentQuestion];
-					$('#questiontext').text(currentq);	
+					$('#questiontext').text(currentq);
+					$('#timer').fadeIn(100, function() {});	
 					blink_text();
-					// startTimer();
+					startTimer();
 					// totlen = myQuiz.questionList.length;
 					// $('#score').text('0 / '+totlen);
 				});
-			});
+			}
 
 			function onEachFeatureFunction(feature,layer) {
 				layerGroup.addLayer(layer);
@@ -267,6 +366,14 @@
 						}
 						else{
 								setTimeout(function(){
+									// $('#questionarea').css('display','none');
+									$('#timer').css('display','none');
+									$('#score').html("<b>Score =</b> " + correctTally +" (out of "+questionListLength+")");
+									$('#duration').html("<b>Duration =</b> " + mins +"m "+ seconds+"s");
+									$('#gameover').fadeIn(250, function() {
+										//do something
+									});
+									clearTimeout(timex);
 									$('#questiontext').html('Game Over!');
 								}, 250);
 							}
