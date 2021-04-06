@@ -119,6 +119,8 @@
 				font-size:5vmin;
 				font-family :"Arial", Gadget, sans-serif;
 			}
+
+
 		</style>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	</head>
@@ -166,7 +168,8 @@
 			    crs: L.CRS.Simple,
 			    minZoom: 0,
 			    maxZoom: 2,
-			    layers: [image2, image1]
+			    layers: [image2, image1],
+			    zoomControl: true
 			});
 
 			map.fitBounds(bounds);
@@ -257,9 +260,6 @@
 			    "Grayscale": image1,
 			};
 
-			L.control.layers(baseMaps, {
-				"Cities": layerGroup.addTo(map)
-			}).addTo(map);
 
 			map.panTo(new L.LatLng(400, 400));
 
@@ -335,10 +335,15 @@
 			var hours =0;
 			var mins =0;
 			var seconds =0;
+			map.removeControl(map.zoomControl);
 
 			function off() {
-			  $('#questionarea').css('display','block');
-			    $('#beginscene').fadeOut(250, function() {
+				map.addControl(map.zoomControl);
+				L.control.layers(baseMaps, {
+					"Cities": layerGroup.addTo(map)
+				}).addTo(map);
+				$('#questionarea').css('display','block');
+				$('#beginscene').fadeOut(250, function() {
 					$('#map').css('display','block');
 					let currentq = questionList[currentQuestion];
 					$('#questiontext').text(currentq);
