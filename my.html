@@ -161,14 +161,14 @@
 		<script>
 
 			var bounds = [[0,0], [1000,1000]];
-			var image1 = L.imageOverlay('india_auto_x2.png', bounds);
-			var image2 = L.imageOverlay('india.jpg', bounds);
+			// var image1 = L.imageOverlay('india_auto_x2.png', bounds);
+			var image2 = L.imageOverlay('India-locator-map-blank.svg', bounds);
 
 			var map = L.map('map', {
 			    crs: L.CRS.Simple,
 			    minZoom: 0,
 			    maxZoom: 2,
-			    layers: [image2, image1],
+			    layers: [image2],
 			    zoomControl: true
 			});
 
@@ -257,7 +257,6 @@
 
 			var baseMaps = {
 				"Streets": image2,
-			    "Grayscale": image1,
 			};
 
 
