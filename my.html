@@ -1,5 +1,8 @@
 <html>
 	<head>
+		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+		<meta content="utf-8" http-equiv="encoding">
+
 		<title>
 			Utkarsh
 		</title>
@@ -13,7 +16,7 @@
 		<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
 		integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
 		crossorigin=""></script>
-		<script src="jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 		<style>
 
 			html, body{
@@ -40,6 +43,16 @@
 				transform: translate(-50%, -50%);
 				width: 14vmin;
 				height: 14vmin;
+			}
+			#taptoplay{
+				position:absolute;
+				margin: 0 auto;
+				left:50%;
+				top:65%;
+				transform: translate(-50%, -50%);
+				width: auto;
+				font-size:5vmin;
+				font-family :"Arial", Gadget, sans-serif;
 			}
 			#map { 
 				display:block;
@@ -77,9 +90,24 @@
 			#timer{
 				position: absolute;
 				display: none;
-				padding: 2px;
+				padding: 2px 5px 2px 8px;
+				border-radius: 5px 0px 0px 5px;
 				bottom:7%;
 				right: 0px;
+				width: auto;
+				/*height: 30px;*/
+				font-family :"Arial", Gadget, sans-serif;
+				font-size:4vmin;
+				background-color:  #5998a6;
+				z-index: 50;
+			}
+			#attempts{
+				position: absolute;
+				display: none;
+				padding: 2px 8px 2px 5px;
+				border-radius: 0px 5px 5px 0px;
+				bottom:7%;
+				left: 0px;
 				width: auto;
 				/*height: 30px;*/
 				font-family :"Arial", Gadget, sans-serif;
@@ -102,7 +130,7 @@
 				position: absolute;
 				margin: 0 auto;
 				padding: 0;
-				width: auto;
+				width: 80%;
 				left:50%;
 				top: 50%;
 				transform: translate(-50%,-50%);
@@ -111,15 +139,70 @@
 				font-size:8vmin;
 				z-index: 30;
 			}
-			#score{
-				font-size:5vmin;
+			#stats{
+				display:inline-block;
+				padding: 1%;
+				border-style: solid;
+				border-radius: 10px;
+				z-index: 30;
+			}
+			#score,#duration,#accuracy,#totquestions{
+				font-size:4vmin;
 				font-family :"Arial", Gadget, sans-serif;
 			}
-			#duration{
-				font-size:5vmin;
-				font-family :"Arial", Gadget, sans-serif;
+			#Statsheading,{
+				color:black;
+				font-size:6vmin;
+				cursor: pointer;
+			}
+			#reload{
+				color:Orange;
+				font-size:10vmin;
+				cursor: pointer;
 			}
 
+			.shakeanim{
+				animation: shaking 0.5s;
+  				animation-iteration-count: 1;
+			}
+
+			#taptoplay{
+				animation: blinker 1s;
+  				animation-iteration-count: infinite;
+			}
+
+			@keyframes shaking {
+				0% {
+				    transform: translateX(0);
+				  }
+
+				  20% {
+				    transform: translateX(-5%);
+				  }
+
+				  40% {
+				    transform: translateX(5%);
+				  }
+
+				  60% {
+				    transform: translateX(-5%);
+				  }
+
+				  80% {
+				    transform: translateX(5%);
+				  }
+
+				  100% {
+				    transform: translateX(0);
+				  }
+			}
+
+			@keyframes blinker
+			{  
+			    0% { opacity: 1.0; }
+			    50% { opacity: 0.0; }
+			    100% { opacity: 1.0; }
+			 }
 
 		</style>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -132,7 +215,9 @@
 				  <polygon class="play-btn__svg" points="9.33 6.69 9.33 19.39 19.3 13.04 9.33 6.69"/>
 				  <path class="play-btn__svg" d="M26,13A13,13,0,1,1,13,0,13,13,0,0,1,26,13ZM13,2.18A10.89,10.89,0,1,0,23.84,13.06,10.89,10.89,0,0,0,13,2.18Z"/>
 				</svg> 
+				<!-- <br><br><center></center> -->
 			</div>
+			<span id="taptoplay">Tap to Play</span>
 		</div>
 
 		
@@ -143,14 +228,26 @@
 		<div id="timer">
 			<span id="mins">00:</span> <span id="seconds">00</span>
 		</div>
+		<div id="attempts">
+			<span id="numattempts">Attempts = 0</span>
+		</div>
 		<div id="gameover">
 			<b>
 				<div id="gameovertext">
 					<u><b>Game Over</b></u>
 					<br><br>
-					<span id="score">Score : </span>
+					<span id="Statsheading">Stats</span><br>
+					<div id="stats">
+						<span id="totquestions">#Questions : </span>
+						<br>
+						<span id="score">#Attempts : </span>
+						<br>
+						<span id="accuracy">Accuracy : </span>
+						<br>
+						<span id="duration">Duration : </span>
+					</div>
 					<br>
-					<span id="duration">Duration : </span>
+					<span id="reload"><b>&#x21bb;</b></span>
 				</div>
 			</b>
 			<br><!-- 
@@ -160,19 +257,31 @@
 		</div>
 		<script>
 
-			var bounds = [[0,0], [1000,1000]];
+			console.log(window.screen.height);
+			console.log(window.screen.width);
+
+			var bounds = [[0,0], [Math.round(1734*0.9),Math.round(1486*0.95)]];
 			// var image1 = L.imageOverlay('india_auto_x2.png', bounds);
-			var image2 = L.imageOverlay('India-locator-map-blank.svg', bounds);
+			var image2 = L.imageOverlay('https://upload.wikimedia.org/wikipedia/commons/5/57/India-locator-map-blank.svg', bounds);
 
 			var map = L.map('map', {
 			    crs: L.CRS.Simple,
-			    minZoom: 0,
+			    minZoom: -2,
 			    maxZoom: 2,
 			    layers: [image2],
 			    zoomControl: true
 			});
 
+			bounds = L.latLngBounds(bounds);
 			map.fitBounds(bounds);
+			var center = bounds.getCenter();
+			map.setView(center, -1);
+
+			// var bounds = L.latLngBounds([[0, 0],[window.screen.height, window.screen.width]]);
+			// var wantedZoom = map.getBoundsZoom(bounds, true);
+			// console.log(wantedZoom); 
+			// var center = bounds.getCenter();
+			// map.setView(center, wantedZoom);
 
 
 
@@ -180,7 +289,7 @@
 			// L.marker(sol).addTo(map).bindPopup('Mumbai');
 
 			var southWest = L.latLng(0,0),
-			northEast = L.latLng(1000, 1000);
+			northEast = L.latLng(Math.round(1734*0.9),Math.round(1486*0.95));
 			var bounds = L.latLngBounds(southWest, northEast);
 
 			map.setMaxBounds(bounds);
@@ -195,9 +304,9 @@
 			//     }
 			// }
 
-			function onClick(e) {
-			    alert(this.getLatLng());
-			}
+			// function onClick(e) {
+			//     alert(this.getLatLng());
+			// }
 
 			var layerGroup = L.featureGroup();
 
@@ -216,7 +325,7 @@
 			    		"type":"Feature",
 					    "geometry": {
 					        "type": "Point",
-					        "coordinates": [300,300]
+					        "coordinates": [250,400]
 					    },
 					    "properties": {
 					        "name": "Bokaro",
@@ -231,6 +340,17 @@
 					    },
 					    "properties": {
 					        "name": "Corbett National Park",
+					        "popupContent": "This is where I go!"
+					    },
+			    	},
+			    	{
+			    		"type":"Feature",
+					    "geometry": {
+					        "type": "Point",
+					        "coordinates": [500,500]
+					    },
+					    "properties": {
+					        "name": "Panchmarhi",
 					        "popupContent": "This is where I go!"
 					    },
 			    	}
@@ -260,7 +380,7 @@
 			};
 
 
-			map.panTo(new L.LatLng(400, 400));
+			// map.panTo(new L.LatLng(400, 400));
 
 			map.on("click", function(e){
 				layerGroup.addLayer(new L.Marker([e.latlng.lat, e.latlng.lng]));
@@ -287,6 +407,8 @@
 
 			  return array;
 			};
+
+			$('#taptoplay').fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(200, function(){});
 
 			function blink_text(){
 			   $('#questiontext').fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(200, function() {
@@ -331,10 +453,15 @@
 			var questionListLength = questionList.length;
 			var correctTally=0;
 			var wrongAttempts=0;
+			var allwrongAttempts=0;
+			var num_attempts=0;
 			var hours =0;
 			var mins =0;
 			var seconds =0;
 			map.removeControl(map.zoomControl);
+
+			var audio = new Audio('audio_file.mp3');
+			audio.play();
 
 			function off() {
 				map.addControl(map.zoomControl);
@@ -342,10 +469,22 @@
 					"Cities": layerGroup.addTo(map)
 				}).addTo(map);
 				$('#questionarea').css('display','block');
+				currentQuestion=0;
+				questionListLength;
+				questionList = shuffle(Array.from(out["name"]));
+				questionListLength = questionList.length;
+				correctTally=0;
+				wrongAttempts=0;
+				allwrongAttempts=0;
+				num_attempts=0;
+				hours =0;
+				mins =0;
+				seconds =0;
 				$('#beginscene').fadeOut(250, function() {
 					$('#map').css('display','block');
 					let currentq = questionList[currentQuestion];
 					$('#questiontext').text(currentq);
+					$('#attempts').fadeIn(100, function() {});	
 					$('#timer').fadeIn(100, function() {});	
 					blink_text();
 					startTimer();
@@ -358,11 +497,12 @@
 				layerGroup.addLayer(layer);
 				layer.on('click', function (e) {
 					var choice = feature.properties.name;
+					num_attempts++;
+					$('#numattempts').text("Attempts = "+(num_attempts));
 					if (choice === questionList[currentQuestion]){
 						currentQuestion++;
 						correctTally++;
 						wrongAttempts=0;
-						console.log(currentQuestion)
 						if (currentQuestion < questionListLength){
 							let nextq = questionList[currentQuestion];
 							$('#questiontext').text(nextq);
@@ -372,20 +512,42 @@
 								setTimeout(function(){
 									// $('#questionarea').css('display','none');
 									$('#timer').css('display','none');
-									$('#score').html("<b>Score =</b> " + correctTally +" (out of "+questionListLength+")");
-									$('#duration').html("<b>Duration =</b> " + mins +"m "+ seconds+"s");
+									$('#attempts').css('display','none');
+									$('#totquestions').html("<b>#Questions = </b> " + questionListLength);
+									$('#score').html("<b>#Attempts = </b> " + (num_attempts));
+									$('#accuracy').html("<b>Accuracy = </b> " + Math.round((questionListLength/num_attempts)*10000)/100+"%");
+									$('#duration').html("<b>Duration = </b> " + mins +"m "+ seconds+"s");
 									$('#gameover').fadeIn(250, function() {
 										//do something
 									});
 									clearTimeout(timex);
 									$('#questiontext').html('Game Over!');
+									$("#reload").click(function(){
+										num_attempts = 0;
+										$('#numattempts').text("Attempts = "+(num_attempts));
+										$('#beginscene').fadeIn(200, function() {
+											$('#gameover').fadeOut(100, function() {
+												
+											});
+										});
+										$('#questionarea').css('display','none');
+									}); 
 								}, 250);
 							}
 					}
 					else{
+							$("#questiontext").css("color", "red");
+							setTimeout(function(){
+						  		$("#questiontext").css("color", "black");
+						  		setTimeout(function(){
+							  		$("#questiontext").css("color", "red");
+							  		setTimeout(function(){
+								  		$("#questiontext").css("color", "black");
+									}, 100);
+								}, 100);
+							}, 100);
 							wrongAttempts++;
-							// $('#score').text(myQuiz.correctTally);
-							
+							allwrongAttempts++;						
 						}
 			    });
 			};
@@ -393,4 +555,3 @@
 		</script>
 	</body>
 </html>
-
