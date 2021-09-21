@@ -460,8 +460,8 @@
 			var seconds =0;
 			map.removeControl(map.zoomControl);
 
-			var audio = new Audio('audio_file.mp3');
-			audio.play();
+			var correct_audio = new Audio('click_sound.mp3');
+			
 
 			function off() {
 				map.addControl(map.zoomControl);
@@ -500,6 +500,7 @@
 					num_attempts++;
 					$('#numattempts').text("Attempts = "+(num_attempts));
 					if (choice === questionList[currentQuestion]){
+						correct_audio.play();
 						currentQuestion++;
 						correctTally++;
 						wrongAttempts=0;
