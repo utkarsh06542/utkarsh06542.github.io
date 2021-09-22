@@ -1057,6 +1057,12 @@
 					else{
 						check_answer = targetList[currentQuestion].includes(choice);
 					}
+					try {
+				  		layerGroup.removeLayer(error_marker);
+					}
+					catch(err) {
+				  		//not present
+					}
 					if (check_answer){
 						correct_audio.play();
 						currentQuestion++;
@@ -1116,9 +1122,12 @@
 							allwrongAttempts++;
 							if (wrongAttempts>=2){
 								error_marker = new L.Marker(new L.LatLng(coordinates[1],coordinates[0]), {icon: customHtmlIcon});
+								error_marker.setZIndexOffset(-100);
 								layerGroup.addLayer(error_marker);
+								console.log('added');
 								setTimeout(function(){
 								  		layerGroup.removeLayer(error_marker);
+								  		console.log('removed');
 									}, 4000);
 							}
 						}
