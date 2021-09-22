@@ -171,6 +171,136 @@
   				animation-iteration-count: infinite;
 			}
 
+			.Click-here {
+			  position: absolute;
+			  display: none;
+			  right: 0px;
+			  top: 5%;
+			  cursor: pointer;
+			  background-image: linear-gradient(190deg, #f83600 0%, #fee140 100%);
+			  color: #fff;
+			  width: auto;
+			  border-radius: 20% 0% 0% 20%;
+			  text-align: center;
+			  font-size: 4vmin;
+			  padding: 1%;
+			  margin: 0 auto;
+			  transition:background-image 3s ease-in-out;
+			  z-index: 10000;
+			}
+			.Click-here:hover{
+			  transition:background-image 3s ease-in-out;
+			  background-image: linear-gradient(90deg, #fee140 0%, #f83600 100%);
+			}
+			.custom-model-main {
+			  text-align: center;
+			  overflow: hidden;
+			  position: fixed;
+			  top: 0;
+			  right: 0;
+			  bottom: 0;
+			  left: 0; /* z-index: 1050; */
+			  -webkit-overflow-scrolling: touch;
+			  outline: 0;
+			  opacity: 0;
+			  -webkit-transition: opacity 0.15s linear, z-index 0.15;
+			  -o-transition: opacity 0.15s linear, z-index 0.15;
+			  transition: opacity 0.15s linear, z-index 0.15;
+			  z-index: -1;
+			  overflow-x: hidden;
+			  overflow-y: auto;
+			}
+
+			.model-open {
+			  z-index: 99999;
+			  opacity: 1;
+			  overflow: hidden;
+			}
+			.custom-model-inner {
+			  -webkit-transform: translate(0, -25%);
+			  -ms-transform: translate(0, -25%);
+			  transform: translate(0, -25%);
+			  -webkit-transition: -webkit-transform 0.3s ease-out;
+			  -o-transition: -o-transform 0.3s ease-out;
+			  transition: -webkit-transform 0.3s ease-out;
+			  -o-transition: transform 0.3s ease-out;
+			  transition: transform 0.3s ease-out;
+			  transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
+			  display: inline-block;
+			  vertical-align: middle;
+			  width: 600px;
+			  margin: 30px auto;
+			  max-width: 97%;
+			}
+			.custom-model-wrap {
+			  display: block;
+			  width: 100%;
+			  position: relative;
+			  background-color: #fff;
+			  border: 1px solid #999;
+			  border: 1px solid rgba(0, 0, 0, 0.2);
+			  border-radius: 6px;
+			  -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+			  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+			  background-clip: padding-box;
+			  outline: 0;
+			  text-align: left;
+			  padding: 20px;
+			  -webkit-box-sizing: border-box;
+			  -moz-box-sizing: border-box;
+			  box-sizing: border-box;
+			  max-height: calc(100vh - 70px);
+				overflow-y: auto;
+			}
+			.model-open .custom-model-inner {
+			  -webkit-transform: translate(0, 0);
+			  -ms-transform: translate(0, 0);
+			  transform: translate(0, 0);
+			  position: relative;
+			  z-index: 999;
+			}
+			.model-open .bg-overlay {
+			  background: rgba(0, 0, 0, 0.6);
+			  z-index: 99;
+			}
+			.bg-overlay {
+			  background: rgba(0, 0, 0, 0);
+			  height: 100vh;
+			  width: 100%;
+			  position: fixed;
+			  left: 0;
+			  top: 0;
+			  right: 0;
+			  bottom: 0;
+			  z-index: 0;
+			  -webkit-transition: background 0.15s linear;
+			  -o-transition: background 0.15s linear;
+			  transition: background 0.15s linear;
+			}
+			.close-btn {
+			  position: absolute;
+			  right: 0;
+			  top: -30px;
+			  cursor: pointer;
+			  z-index: 99;
+			  font-size: 30px;
+			  color: #fff;
+			}
+
+			@media screen and (min-width:800px){
+				.custom-model-main:before {
+				  content: "";
+				  display: inline-block;
+				  height: auto;
+				  vertical-align: middle;
+				  margin-right: -0px;
+				  height: 100%;
+				}
+			}
+			@media screen and (max-width:799px){
+			  .custom-model-inner{margin-top: 45px;}
+			}
+
 			.map__marker {
 					  margin:0px;
 					  display: block;
@@ -202,7 +332,7 @@
 			    0% { opacity: 1.0; }
 			    50% { opacity: 0.0; }
 			    100% { opacity: 1.0; }
-			 }
+			}
 
 		</style>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -220,7 +350,19 @@
 			<span id="taptoplay">Tap to Play</span>
 		</div>
 
-		
+		<div class="Click-here"><i>i</i></div>        
+		<div class="custom-model-main">
+		    <div class="custom-model-inner">        
+		    <div class="close-btn">×</div>
+		        <div class="custom-model-wrap">
+		            <div class="pop-up-content-wrap">
+		               Not much!
+		            </div>
+		        </div>  
+		    </div>  
+		    <div class="bg-overlay"></div>
+		</div> 
+
 		<div id="map"></div>
 		<div id="questionarea">
 			<b><span id="questiontext">Get, Set, Go !</span></b>
@@ -331,6 +473,7 @@
 						"properties": {
 							"name": "Saraikella Chhau",
 							"target": "Jharkhand",
+							"info": "Form of a mask dance that uses vigorous martial movements to narrate mythological stories. A UNESCO intangible cultural heritage."
 						},
 					},
 					{
@@ -342,6 +485,7 @@
 						"properties": {
 							"name": "Mayurbhanj Chhau",
 							"target": "Odisha",
+							"info": "Do NOT wear mask! Uses vigorous martial movements to narrate mythological stories. A UNESCO intangible cultural heritage."
 						},
 					},
 					{
@@ -353,6 +497,7 @@
 						"properties": {
 							"name": "Purulia Chhau",
 							"target": "West Bengal",
+							"info": "Form of a mask dance that uses vigorous martial movements to narrate mythological stories. A UNESCO intangible cultural heritage."
 						},
 					},
 					{
@@ -364,6 +509,7 @@
 						"properties": {
 							"name": "Garba",
 							"target": "Gujarat",
+							"info": "Actually refers to 'Garba deep'- an earthen pot with holes, in whihc lamp is lit and women dance around it."
 						},
 					},
 					{
@@ -375,6 +521,7 @@
 						"properties": {
 							"name": "Tarangamel",
 							"target": "Goa",
+							"info": "Celebrates youthfulness. Performed during Holi and Dusshera. Use of rainbow-like costumes with mutlicoloured flags."
 						},
 					},
 					{
@@ -386,6 +533,7 @@
 						"properties": {
 							"name": "Ghoomar (or Gangore)",
 							"target": "Rajasthan",
+							"info": "Performed by women of the Bhil tribe. Pirouetting movements of women. Resembles flowing Ghaghra."
 						},
 					},
 					{
@@ -397,6 +545,7 @@
 						"properties": {
 							"name": "Kalbelia",
 							"target": "Rajasthan",
+							"info": "Performed by women of Kalbelia community. Costumes and dance movements are similar to that of the serpents. 'Been' is the popular musical instrument of this dance. Part of UNESCO list."
 						},
 					},
 					{
@@ -408,6 +557,7 @@
 						"properties": {
 							"name": "Charba",
 							"target": "Himachal Pradesh",
+							"info": "Performed during Dussehra"
 						},
 					},
 					{
@@ -419,6 +569,7 @@
 						"properties": {
 							"name": "Giddha (or Bhangra)",
 							"target": "Punjab",
+							"info": "Giddha is the female counterpart of the male Bhangra."
 						},
 					},
 					{
@@ -430,6 +581,7 @@
 						"properties": {
 							"name": "Dadra",
 							"target": "Uttar Pradesh",
+							"info": "Accompanied by music of the same style. Was extremely popular among the courtesans of the Lucknow region."
 						},
 					},
 					{
@@ -441,6 +593,7 @@
 						"properties": {
 							"name": "Jawara",
 							"target": "Madhya Pradesh",
+							"info": "The harvest dance popular in the Bundelkhand region. Balancing a basket full of jawar on the head."
 						},
 					},
 					{
@@ -452,6 +605,7 @@
 						"properties": {
 							"name": "Matki",
 							"target": "Madhya Pradesh",
+							"info": "Performed by women of Malwa region on the ocassion of wedding. Mainly performed solo, while balancing a number of earhten pots on the head. Aada and Khada Nach are popular variants."
 						},
 					},
 					{
@@ -463,6 +617,7 @@
 						"properties": {
 							"name": "Gaur Muria (Bison Horn)",
 							"target": "Chhattisgarh",
+							"info": "Performed by Muria tribes who live in the Bastar region. Intimates movements of Bison and is performed in group by both men and women."
 						},
 					},
 					{
@@ -474,6 +629,7 @@
 						"properties": {
 							"name": "Alkap",
 							"target": "West Bengal",
+							"info": "Prevalent in Rajmahal Hills of Jharkhand and Malda region of West Bengal. Performed by troops of 10-12 dancer. 1-2 lead singers known as 'gayens' Generally associated with the 'Gajan festival' of Lord Shiva."
 						},
 					},
 					{
@@ -485,6 +641,7 @@
 						"properties": {
 							"name": "Biraha",
 							"target": "Bihar",
+							"info": "Along with its variant 'Bidesia', is popular in rural Bihar. Potrayal of the pain of women, whose partners are away from home. However, this dance is practised solely by males."
 						},
 					},
 					{
@@ -496,6 +653,7 @@
 						"properties": {
 							"name": "Paika",
 							"target": "Odisha",
+							"info": "Martial folk dance performed in southern Odisha. Paika is a form of long spear."
 						},
 					},
 					{
@@ -507,6 +665,7 @@
 						"properties": {
 							"name": "Bagurumba",
 							"target": "Assam",
+							"info": "By Bodo tribe. Related to nature."
 						},
 					},
 					{
@@ -518,6 +677,7 @@
 						"properties": {
 							"name": "Jat Jatin",
 							"target": "Bihar",
+							"info": "Popular in northern Bihar, especially the regions of Mithila. Representation of tender love and quarrel of a married couple."
 						},
 					},
 					{
@@ -528,7 +688,8 @@
 						},
 						"properties": {
 							"name": "Jhumair",
-							"target": "Odisha",
+							"target": ["Odisha","Jharkhand"],
+							"info": "Popular harvest dance. Both in Jharkhand and Odisha. Two variants - Janani and Mardana Jhumair."
 						},
 					},
 					{
@@ -540,6 +701,7 @@
 						"properties": {
 							"name": "Danda Jatra",
 							"target": "Odisha",
+							"info": "While it narrates lore about Shiva, the theme is generally social harmony and brotherhood."
 						},
 					},
 					{
@@ -551,6 +713,7 @@
 						"properties": {
 							"name": "Bihu",
 							"target": "Assam",
+							"info": "By both men and women."
 						},
 					},
 					{
@@ -562,6 +725,7 @@
 						"properties": {
 							"name": "Thang Ta",
 							"target": "Manipur",
+							"info": "Martial dance.  Thang means sword and Ta means spear."
 						},
 					},
 					{
@@ -573,6 +737,7 @@
 						"properties": {
 							"name": "Rangma",
 							"target": "Nagaland",
+							"info": "War dance by Nagas. Colourfull headgears."
 						},
 					},
 					{
@@ -584,6 +749,7 @@
 						"properties": {
 							"name": "Singhi Chham",
 							"target": "Sikkim",
+							"info": "Furry lion costumes symbolizing snow lion and pay tribute to Khang-Chen Dzong Pa (Kanchendzonga peak)."
 						},
 					},
 					{
@@ -595,6 +761,7 @@
 						"properties": {
 							"name": "Kummi",
 							"target": ["Tamil Nadu","Kerala"],
+							"info": "Both in Tamil Nadu and Kerela. By women. A unique feature is absence of any accompanying music. Generally performed during pongal."
 						},
 					},
 					{
@@ -606,6 +773,7 @@
 						"properties": {
 							"name": "Mayilattam",
 							"target": ["Tamil Nadu","Kerala"],
+							"info": "Both in Tamil Nadu and Kerela. Young girls are dressed as peacocks with colourful headgears. Also known as peacock dance."
 						},
 					},
 					{
@@ -617,6 +785,7 @@
 						"properties": {
 							"name": "Kaikottikali",
 							"target": "Kerala",
+							"info": "Both by mean and women. At time of Onam to celebrate rich harvest."
 						},
 					},
 					{
@@ -628,6 +797,7 @@
 						"properties": {
 							"name": "Butta Bommalu",
 							"target": "Andhra Pradesh",
+							"info": "Means basket toys. Popular in West Godavari district. Masks and non-verbal music."
 						},
 					},
 					{
@@ -639,6 +809,7 @@
 						"properties": {
 							"name": "Padayani",
 							"target": "Kerala",
+							"info": "Martial dance performed in the Bhagavati temples of souhtern Kerala. Padayani means rows of infantry. Huge masks known as 'kolams'! Present divine narratives."
 						},
 					},
 					{
@@ -650,6 +821,7 @@
 						"properties": {
 							"name": "Kolkali-Parichakali",
 							"target": ["Lakshwadeep","Kerala"],
+							"info": "Dancers use mock weapons of wood and enact fight sequences."
 						},
 					},
 					{
@@ -661,6 +833,7 @@
 						"properties": {
 							"name": "Pata Kunitha",
 							"target": "Karnataka",
+							"info": "Popular in Mysore region. By men who use long bamboo poles decorated with ribbons, known as pata."
 						},
 					},
 					{
@@ -672,6 +845,7 @@
 						"properties": {
 							"name": "Chakyar Koothu",
 							"target": "Kerala",
+							"info": "Solo performance. Peroformer dreses himself as a snake. A large black moustache!"
 						},
 					},
 					{
@@ -683,6 +857,7 @@
 						"properties": {
 							"name": "Jhoomar",
 							"target": "Punjab",
+							"info": "By tribal sikhs in Punjab. Movement of arms on tune of drum."
 						},
 					},
 					{
@@ -694,6 +869,7 @@
 						"properties": {
 							"name": "Karma Nach",
 							"target": "Jharkhand",
+							"info": "In chotta-nagpur plateau. Dance with arms around the waist."
 						},
 					},
 					{
@@ -705,6 +881,7 @@
 						"properties": {
 							"name": "Raut Naach",
 							"target": "Chhattisgarh",
+							"info": "By yadav community."
 						},
 					},
 					{
@@ -716,6 +893,7 @@
 						"properties": {
 							"name": "Dumhal",
 							"target": "Jammu and Kashmir",
+							"info": "By Wattal tribes. Tall conical hat for men. By both mean and women."
 						},
 					},
 					{
@@ -727,6 +905,7 @@
 						"properties": {
 							"name": "Fugdi",
 							"target": ["Maharastra","Goa"],
+							"info": ""
 						},
 					},
 					{
@@ -738,6 +917,7 @@
 						"properties": {
 							"name": "Cheraw",
 							"target": "Mizoram",
+							"info": "Using bamboo sticks."
 						},
 					},
 					{
@@ -749,6 +929,7 @@
 						"properties": {
 							"name": "Dalkhai",
 							"target": "Odisha",
+							"info": "Mostly performed during Dussehra. At the beginning and end of every stanza, a word signifying 'girlfriend' is used."
 						},
 					},
 					{
@@ -760,6 +941,7 @@
 						"properties": {
 							"name": "Hulivesha",
 							"target": "Karnataka",
+							"info": "By male dancers painted like the tiger to honour Goddess Durga. Performed during Navaratri."
 						},
 					},
 					{
@@ -771,6 +953,7 @@
 						"properties": {
 							"name": "Tippani",
 							"target": "Gujarat",
+							"info": "By women who beat the floors with tippani - two long wooden sticks."
 						},
 					},
 					{
@@ -782,6 +965,7 @@
 						"properties": {
 							"name": "Garadi",
 							"target": "Puducherry",
+							"info": "Celebrate the victory of Lord Rama over Ravana. The dancers are distinguished as 'Vanars'(Monkeys). Dancers wear 10 'Anjalis'(iron rings) on each of their legs."
 						},
 					},
 					{
@@ -793,6 +977,7 @@
 						"properties": {
 							"name": "Tera Tali",
 							"target": "Rajasthan",
+							"info": "Performed by 'Kamar tribes'. Women sit on ground while performing."
 						},
 					},
 					{
@@ -804,6 +989,7 @@
 						"properties": {
 							"name": "Hojagiri",
 							"target": "Tripura",
+							"info": "Movement of only the lower-half of the body. By a group of 4-6 women or young girls. balance earthen pots."
 						},
 					},
 					{
@@ -945,7 +1131,7 @@
 			};
 
 			var currentQuestion;
-			var shuffleoutput, questionList, targetList, questionListLength, originalQuestionList;
+			var shuffleoutput, questionList, targetList, questionListLength, originalQuestionList, infoList;
 			var correctTally, wrongAttempts, allwrongAttempts, num_attempts;
 			var hours,mins, seconds;
 			var error_marker;
@@ -999,9 +1185,12 @@
 			function off() {
 				if (replayed===0){
 					map.addControl(map.zoomControl);
-					L.control.layers(baseMaps, {
-						"Cities": layerGroup.addTo(map)
-					}).addTo(map);
+					$(".Click-here").css('display','block');
+					layerGroup.addTo(map);
+					// L.control.layers(baseMaps, {
+					// 	"Cities": layerGroup.addTo(map)
+					// }).addTo(map);
+
 				}
 
 				currentQuestion=0;
@@ -1009,12 +1198,15 @@
 				tempcoordinatesList = Array.from(out_2["coordinates"]);
 				questionList = shuffle(originalQuestionList.slice());
 				var temptargetList = Array.from(out["target"]);
+				var tempinfoList = Array.from(out["info"]);
 				targetList = new Array(temptargetList.length);
+				infoList = new Array(tempinfoList.length);
 				corrdinateList = new Array(temptargetList.length);
 				for (let i = 0; i < questionList.length; i++) {
 				  var index = originalQuestionList.indexOf(questionList[i]);
 				  targetList[i]=temptargetList[index];
 				  corrdinateList[i]=tempcoordinatesList[index];
+				  infoList[i]=tempinfoList[index];
 				} 
 				// console.log(originalQuestionList,questionList);
 				// console.log(temptargetList,targetList);
@@ -1030,6 +1222,7 @@
 					$('#map').css('display','block');
 					let currentq = ask_question(currentQuestion,questionList,targetList);
 					$('#questiontext').text(currentq);
+					$(".Click-here").text();
 					$('#attempts').fadeIn(100, function() {});	
 					$('#timer').fadeIn(100, function() {});	
 					blink_text();
@@ -1133,6 +1326,16 @@
 						}
 			    });
 			};
+
+			$(".Click-here").on('click', function() {
+			  $(".custom-model-main").addClass('model-open');
+			  var current_info = infoList[currentQuestion];
+			  $(".pop-up-content-wrap").text(current_info);
+
+			}); 
+			$(".close-btn, .bg-overlay").click(function(){
+			  $(".custom-model-main").removeClass('model-open');
+			});
 
 		</script>
 	</body>
