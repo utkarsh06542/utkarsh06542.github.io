@@ -59,14 +59,14 @@
 				position: absolute;
 				margin: 0 auto;
 				left:50%;
-				top:50%;
-				transform: translate(-50%, -50%);
+				top:0%;
+				transform: translate(-50%, 0%);
 				width: 100%;
-				height: 100%;
+				height: 95%;
 				z-index: 5;
 			}
 			#questionarea{
-				display: none;
+				display: block;
 				position: absolute;
 				bottom:0px;
 				left:0px;
@@ -171,30 +171,45 @@
   				animation-iteration-count: infinite;
 			}
 
-			@keyframes shaking {
-				0% {
-				    transform: translateX(0);
-				  }
+			.map__marker {
+					  margin:0px;
+					  display: block;
+					  width: 5px;
+					  height: 5px;
+					  border-radius: 50%;
+					  background: #cca92c;
+					  cursor: pointer;
+					  box-shadow: 0 0 0 rgba(204,169,44, 0.4);
+					  animation: pulse 2s infinite;
+					}
+			.map__marker:hover {
+			  animation: none;
+			}
 
-				  20% {
-				    transform: translateX(-5%);
-				  }
-
-				  40% {
-				    transform: translateX(5%);
-				  }
-
-				  60% {
-				    transform: translateX(-5%);
-				  }
-
-				  80% {
-				    transform: translateX(5%);
-				  }
-
-				  100% {
-				    transform: translateX(0);
-				  }
+			@-webkit-keyframes pulse {
+			  0% {
+			    -webkit-box-shadow: 0 0 0 0 rgba(204,169,44, 0.4);
+			  }
+			  70% {
+			      -webkit-box-shadow: 0 0 0 100px rgba(204,169,44, 0);
+			  }
+			  100% {
+			      -webkit-box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+			  }
+			}
+			@keyframes pulse {
+			  0% {
+			    -moz-box-shadow: 0 0 0 0 rgba(204,169,44, 0.4);
+			    box-shadow: 0 0 0 0 rgba(204,169,44, 0.4);
+			  }
+			  70% {
+			      -moz-box-shadow: 0 0 0 100px rgba(204,169,44, 0);
+			      box-shadow: 0 0 0 100px rgba(204,169,44, 0);
+			  }
+			  100% {
+			      -moz-box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+			      box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+			  }
 			}
 
 			@keyframes blinker
@@ -223,7 +238,7 @@
 		
 		<div id="map"></div>
 		<div id="questionarea">
-			<b><span id="questiontext">My question</span></b>
+			<b><span id="questiontext">Get, Set, Go !</span></b>
 		</div>
 		<div id="timer">
 			<span id="mins">00:</span> <span id="seconds">00</span>
@@ -260,7 +275,7 @@
 			console.log(window.screen.height);
 			console.log(window.screen.width);
 
-			var bounds = [[0,0], [Math.round(1734*0.9),Math.round(1486*0.95)]];
+			var bounds = [[0,0], [Math.round(1734),Math.round(1486)]];
 			// var image1 = L.imageOverlay('india_auto_x2.png', bounds);
 			var image2 = L.imageOverlay('https://upload.wikimedia.org/wikipedia/commons/5/57/India-locator-map-blank.svg', bounds);
 
@@ -289,7 +304,7 @@
 			// L.marker(sol).addTo(map).bindPopup('Mumbai');
 
 			var southWest = L.latLng(0,0),
-			northEast = L.latLng(Math.round(1734*0.9),Math.round(1486*0.95));
+			northEast = L.latLng(Math.round(1734),Math.round(1486));
 			var bounds = L.latLngBounds(southWest, northEast);
 
 			map.setMaxBounds(bounds);
@@ -321,39 +336,513 @@
 			var geojsonFeature = {
 			    "type": "FeatureCollection",
 			    "features":[
-			    	{
-			    		"type":"Feature",
-					    "geometry": {
-					        "type": "Point",
-					        "coordinates": [250,400]
-					    },
-					    "properties": {
-					        "name": "Bokaro",
-					        "popupContent": "This is where I live!"
-					    },
-			    	},
-			    	{
-			    		"type":"Feature",
-					    "geometry": {
-					        "type": "Point",
-					        "coordinates": [400,400]
-					    },
-					    "properties": {
-					        "name": "Corbett National Park",
-					        "popupContent": "This is where I go!"
-					    },
-			    	},
-			    	{
-			    		"type":"Feature",
-					    "geometry": {
-					        "type": "Point",
-					        "coordinates": [500,500]
-					    },
-					    "properties": {
-					        "name": "Panchmarhi",
-					        "popupContent": "This is where I go!"
-					    },
-			    	}
+			    	
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [897,902.83]
+						},
+						"properties": {
+							"name": "Saraikella Chhau",
+							"target": "Jharkhand",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [863,751.75]
+						},
+						"properties": {
+							"name": "Mayurbhanj Chhau",
+							"target": "Odisha",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1034,877.87]
+						},
+						"properties": {
+							"name": "Purulia Chhau",
+							"target": "West Bengal",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [191,890.83]
+						},
+						"properties": {
+							"name": "Garba",
+							"target": "Gujarat",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [308.5,464.86]
+						},
+						"properties": {
+							"name": "Tarangamel",
+							"target": "Goa",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [318,1093.77]
+						},
+						"properties": {
+							"name": "Ghoomar (or Gangore)",
+							"target": "Rajasthan",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [318,1093.77]
+						},
+						"properties": {
+							"name": "Kalbelia",
+							"target": "Rajasthan",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [490,1383.93]
+						},
+						"properties": {
+							"name": "Charba",
+							"target": "Himachal Pradesh",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [404,1319.89]
+						},
+						"properties": {
+							"name": "Giddha (or Bhangra)",
+							"target": "Punjab",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [668,1100]
+						},
+						"properties": {
+							"name": "Dadra",
+							"target": "Uttar Pradesh",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [548,895.66]
+						},
+						"properties": {
+							"name": "Jawara",
+							"target": "Madhya Pradesh",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [548,895.66]
+						},
+						"properties": {
+							"name": "Matki",
+							"target": "Madhya Pradesh",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [734,778.76]
+						},
+						"properties": {
+							"name": "Gaur Muria (Bison Horn)",
+							"target": "Chhattisgarh",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1034,877.87]
+						},
+						"properties": {
+							"name": "Alkap",
+							"target": "West Bengal",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [932,1031.73]
+						},
+						"properties": {
+							"name": "Biraha",
+							"target": "Bihar",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [863,751.75]
+						},
+						"properties": {
+							"name": "Paika",
+							"target": "Odisha",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1241,1103.52]
+						},
+						"properties": {
+							"name": "Bagurumba",
+							"target": "Assam",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [932,1031.73]
+						},
+						"properties": {
+							"name": "Jat Jatin",
+							"target": "Bihar",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [863,751.75]
+						},
+						"properties": {
+							"name": "Jhumair",
+							"target": "Odisha",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [863,751.75]
+						},
+						"properties": {
+							"name": "Danda Jatra",
+							"target": "Odisha",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1241,1103.52]
+						},
+						"properties": {
+							"name": "Bihu",
+							"target": "Assam",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1314,1005.47]
+						},
+						"properties": {
+							"name": "Thang Ta",
+							"target": "Manipur",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1338,1097.54]
+						},
+						"properties": {
+							"name": "Rangma",
+							"target": "Nagaland",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1041.5,1139.54]
+						},
+						"properties": {
+							"name": "Singhi Chham",
+							"target": "Sikkim",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [534,211.41]
+						},
+						"properties": {
+							"name": "Kummi",
+							"target": ["Tamil Nadu","Kerala"],
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [534,211.41]
+						},
+						"properties": {
+							"name": "Mayilattam",
+							"target": ["Tamil Nadu","Kerala"],
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [436,187.4]
+						},
+						"properties": {
+							"name": "Kaikottikali",
+							"target": "Kerala",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [576,437.58]
+						},
+						"properties": {
+							"name": "Butta Bommalu",
+							"target": "Andhra Pradesh",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [436,187.4]
+						},
+						"properties": {
+							"name": "Padayani",
+							"target": "Kerala",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [214,220.38]
+						},
+						"properties": {
+							"name": "Kolkali-Parichakali",
+							"target": ["Lakshwadeep","Kerala"],
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [401,377.55]
+						},
+						"properties": {
+							"name": "Pata Kunitha",
+							"target": "Karnataka",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [436,187.4]
+						},
+						"properties": {
+							"name": "Chakyar Koothu",
+							"target": "Kerala",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [404,1319.89]
+						},
+						"properties": {
+							"name": "Jhoomar",
+							"target": "Punjab",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [897,902.83]
+						},
+						"properties": {
+							"name": "Karma Nach",
+							"target": "Jharkhand",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [734,778.76]
+						},
+						"properties": {
+							"name": "Raut Naach",
+							"target": "Chhattisgarh",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [392,1479.97]
+						},
+						"properties": {
+							"name": "Dumhal",
+							"target": "Jammu and Kashmir",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [407,693.72]
+						},
+						"properties": {
+							"name": "Fugdi",
+							"target": ["Maharastra","Goa"],
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1267.5,903.41]
+						},
+						"properties": {
+							"name": "Cheraw",
+							"target": "Mizoram",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [863,751.75]
+						},
+						"properties": {
+							"name": "Dalkhai",
+							"target": "Odisha",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [401,377.55]
+						},
+						"properties": {
+							"name": "Hulivesha",
+							"target": "Karnataka",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [191,890.83]
+						},
+						"properties": {
+							"name": "Tippani",
+							"target": "Gujarat",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [627,273]
+						},
+						"properties": {
+							"name": "Garadi",
+							"target": "Puducherry",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [318,1093.77]
+						},
+						"properties": {
+							"name": "Tera Tali",
+							"target": "Rajasthan",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1201.5,943.43]
+						},
+						"properties": {
+							"name": "Hojagiri",
+							"target": "Tripura",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [512,1508]
+						},
+						"properties": {
+							"name": "Jabro",
+							"target": "Ladakh",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [407,693.72]
+						},
+						"properties": {
+							"name": "Lavani",
+							"target": "Maharastra",
+						},
+					},
 			    ]
 			};
 
@@ -362,17 +851,38 @@
 			{
 			    Object.entries(properties).forEach(([key, val]) =>
 			    {
-			        acc[key] = acc[key] || new Set();
-			        acc[key].add(val);
+			        acc[key] = acc[key] || new Array();
+			        acc[key].push(val);
 			    });
 
 			    return acc;
 			}, {});
 
-			console.log(Array.from(out["name"]));
+			let out_2 = geojsonFeature.features.reduce((acc, {geometry}) =>
+			{
+			    Object.entries(geometry).forEach(([key, val]) =>
+			    {
+			        acc[key] = acc[key] || new Array();
+			        acc[key].push(val);
+			    });
+
+			    return acc;
+			}, {});
+
+			var geojsonMarkerOptions = {
+			    radius: 8,
+			    fillColor: "orange",
+			    color: "#000",
+			    weight: 1,
+			    opacity: 1,
+			    fillOpacity: 0.8
+			};
 
 			L.geoJSON(geojsonFeature, {
-			    onEachFeature: onEachFeatureFunction
+			    onEachFeature: onEachFeatureFunction,
+			    pointToLayer: function (feature, latlng) {
+			        return L.circleMarker(latlng, geojsonMarkerOptions);
+			    }
 			});
 
 			var baseMaps = {
@@ -380,13 +890,14 @@
 			};
 
 
-			// map.panTo(new L.LatLng(400, 400));
+			map.panTo(new L.LatLng(Math.round(1734*0.5),Math.round(1486*0.5)));
 
-			map.on("click", function(e){
-				layerGroup.addLayer(new L.Marker([e.latlng.lat, e.latlng.lng]));
-				var place_name = prompt("Please enter the name", "");
-				console.log("{\"type\":\"Feature\",\n\"geometry\": {\"type\": \"Point\",\"coordinates\": ["+e.latlng.lat+","+e.latlng.lng+"]},\n\"properties\": {\"name\": \""+place_name+"\"}}");
-			});
+			// map.on("click", function(e){
+			// 	layerGroup.addLayer(new L.circleMarker([e.latlng.lat, e.latlng.lng],geojsonMarkerOptions));
+			// 	var place_name = prompt("Please enter the name", "");
+			// 	var place_target = prompt("Please enter the target", "");
+			// 	console.log("{\"type\":\"Feature\",\n\"geometry\": {\"type\": \"Point\",\"coordinates\": ["+Math.round(e.latlng.lng*100)/100+","+Math.round(e.latlng.lat*100)/100+"]},\n\"properties\": {\"name\": \""+place_name+"\",\n\"target\": \""+place_target+"\"}}");
+			// });
 
 
 			function shuffle(array) {
@@ -403,6 +914,7 @@
 			    temporaryValue = array[currentIndex];
 			    array[currentIndex] = array[randomIndex];
 			    array[randomIndex] = temporaryValue;
+
 			  }
 
 			  return array;
@@ -447,31 +959,80 @@
 			  	},999);
 			};
 
-			var currentQuestion=0;
-			var questionListLength;
-			var questionList = shuffle(Array.from(out["name"]));
-			var questionListLength = questionList.length;
-			var correctTally=0;
-			var wrongAttempts=0;
-			var allwrongAttempts=0;
-			var num_attempts=0;
-			var hours =0;
-			var mins =0;
-			var seconds =0;
+			var currentQuestion;
+			var shuffleoutput, questionList, targetList, questionListLength, originalQuestionList;
+			var correctTally, wrongAttempts, allwrongAttempts, num_attempts;
+			var hours,mins, seconds;
+			var error_marker;
+			var replayed =0;
+			var gametitle = "Dances of Indian States";
 			map.removeControl(map.zoomControl);
+			$('#questiontext').text(gametitle);
 
 			var correct_audio = new Audio('click_sound.mp3');
 			
+			function ask_question(currentQuestion,questionList,targetList){
+				let ques_text = questionList[currentQuestion];
+				if(typeof targetList[currentQuestion]!=='string'){
+						ques_text += " *";
+					}
+				return ques_text;
+			}
+
+			L.HtmlIcon = L.Icon.extend({
+							options: {
+								/*
+								html: (String) (required)
+								iconAnchor: (Point)
+								popupAnchor: (Point)
+								*/
+							},
+
+							initialize: function (options) {
+								L.Util.setOptions(this, options);
+							},
+
+							createIcon: function () {
+								var div = document.createElement('div');
+								div.innerHTML = this.options.html;
+								return div;
+							},
+
+							createShadow: function () {
+								return null;
+							}
+						});
+
+			const HTMLIcon = L.HtmlIcon.extend({
+			    options : {
+			        html : "<div class=\"map__marker\"></div>",
+			    }
+			});
+			const customHtmlIcon = new HTMLIcon();
+
 
 			function off() {
-				map.addControl(map.zoomControl);
-				L.control.layers(baseMaps, {
-					"Cities": layerGroup.addTo(map)
-				}).addTo(map);
-				$('#questionarea').css('display','block');
+				if (replayed===0){
+					map.addControl(map.zoomControl);
+					L.control.layers(baseMaps, {
+						"Cities": layerGroup.addTo(map)
+					}).addTo(map);
+				}
+
 				currentQuestion=0;
-				questionListLength;
-				questionList = shuffle(Array.from(out["name"]));
+				originalQuestionList = Array.from(out["name"]);
+				tempcoordinatesList = Array.from(out_2["coordinates"]);
+				questionList = shuffle(originalQuestionList.slice());
+				var temptargetList = Array.from(out["target"]);
+				targetList = new Array(temptargetList.length);
+				corrdinateList = new Array(temptargetList.length);
+				for (let i = 0; i < questionList.length; i++) {
+				  var index = originalQuestionList.indexOf(questionList[i]);
+				  targetList[i]=temptargetList[index];
+				  corrdinateList[i]=tempcoordinatesList[index];
+				} 
+				console.log(originalQuestionList,questionList);
+				console.log(temptargetList,targetList);
 				questionListLength = questionList.length;
 				correctTally=0;
 				wrongAttempts=0;
@@ -482,7 +1043,7 @@
 				seconds =0;
 				$('#beginscene').fadeOut(250, function() {
 					$('#map').css('display','block');
-					let currentq = questionList[currentQuestion];
+					let currentq = ask_question(currentQuestion,questionList,targetList);
 					$('#questiontext').text(currentq);
 					$('#attempts').fadeIn(100, function() {});	
 					$('#timer').fadeIn(100, function() {});	
@@ -495,23 +1056,41 @@
 
 			function onEachFeatureFunction(feature,layer) {
 				layerGroup.addLayer(layer);
-				layer.on('click', function (e) {
-					var choice = feature.properties.name;
-					num_attempts++;
+				layer.on('click', function (e) {					
+					var choice = feature.properties.target;
+					var coordinates = corrdinateList[currentQuestion];
+					if(typeof choice !== 'string'){
+						choice = choice[0];
+					}
+					num_attempts = num_attempts+1;
 					$('#numattempts').text("Attempts = "+(num_attempts));
-					if (choice === questionList[currentQuestion]){
+					var check_answer=false;
+					console.log(choice,targetList[currentQuestion]);
+					if(typeof targetList[currentQuestion]==='string'){
+						check_answer = (choice === targetList[currentQuestion]);
+					}
+					else{
+						check_answer = targetList[currentQuestion].includes(choice);
+					}
+					if (check_answer){
 						correct_audio.play();
 						currentQuestion++;
 						correctTally++;
+						if (wrongAttempts>1){
+								layerGroup.removeLayer(error_marker);
+							}
 						wrongAttempts=0;
 						if (currentQuestion < questionListLength){
-							let nextq = questionList[currentQuestion];
+							let nextq = ask_question(currentQuestion,questionList,targetList);
 							$('#questiontext').text(nextq);
 							blink_text();
 						}
 						else{
 								setTimeout(function(){
 									// $('#questionarea').css('display','none');
+									if (wrongAttempts>1){
+										layerGroup.removeLayer(error_marker);
+									}
 									$('#timer').css('display','none');
 									$('#attempts').css('display','none');
 									$('#totquestions').html("<b>#Questions = </b> " + questionListLength);
@@ -524,8 +1103,15 @@
 									clearTimeout(timex);
 									$('#questiontext').html('Game Over!');
 									$("#reload").click(function(){
+										replayed++;
 										num_attempts = 0;
+										hours =0;
+										mins =0;
+										seconds =0;
 										$('#numattempts').text("Attempts = "+(num_attempts));
+										$("#mins").text('0'+mins+':');
+										$("#seconds").text('0'+seconds);
+										$('#questiontext').text(gametitle);
 										$('#beginscene').fadeIn(200, function() {
 											$('#gameover').fadeOut(100, function() {
 												
@@ -548,7 +1134,11 @@
 								}, 100);
 							}, 100);
 							wrongAttempts++;
-							allwrongAttempts++;						
+							allwrongAttempts++;
+							if (wrongAttempts==2){
+								error_marker = new L.Marker(new L.LatLng(coordinates[1],coordinates[0]), {icon: customHtmlIcon});
+								layerGroup.addLayer(error_marker);
+							}						
 						}
 			    });
 			};
