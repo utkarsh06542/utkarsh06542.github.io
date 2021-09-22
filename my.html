@@ -1061,9 +1061,9 @@
 						correct_audio.play();
 						currentQuestion++;
 						correctTally++;
-						if (wrongAttempts>1){
-								layerGroup.removeLayer(error_marker);
-							}
+						// if (wrongAttempts>1){
+						// 		layerGroup.removeLayer(error_marker);
+						// 	}
 						wrongAttempts=0;
 						if (currentQuestion < questionListLength){
 							let nextq = ask_question(currentQuestion,questionList,targetList);
@@ -1117,10 +1117,10 @@
 							}, 100);
 							wrongAttempts++;
 							allwrongAttempts++;
-							if (wrongAttempts==2){
-								error_marker = new L.Marker(new L.LatLng(coordinates[1],coordinates[0]), {icon: customHtmlIcon});
-								layerGroup.addLayer(error_marker);
-							}						
+							// if (wrongAttempts==2){
+							// 	error_marker = new L.Marker(new L.LatLng(coordinates[1],coordinates[0]), {icon: customHtmlIcon});
+							// 	layerGroup.addLayer(error_marker);
+							// }						
 						}
 			    });
 			};
