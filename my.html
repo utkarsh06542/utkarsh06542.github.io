@@ -179,7 +179,7 @@
 					  border-radius: 50%;
 					  background: #cca92c;
 					  box-shadow: 0 0 0 rgba(204,169,44, 0.4);
-					  animation: pulse 2s infinite;
+					  animation: pulse 2s 2;
 					  z-index:4;
 					}
 			@keyframes pulse {
@@ -1061,9 +1061,6 @@
 						correct_audio.play();
 						currentQuestion++;
 						correctTally++;
-						if (wrongAttempts>1){
-								layerGroup.removeLayer(error_marker);
-							}
 						wrongAttempts=0;
 						if (currentQuestion < questionListLength){
 							let nextq = ask_question(currentQuestion,questionList,targetList);
@@ -1117,10 +1114,13 @@
 							}, 100);
 							wrongAttempts++;
 							allwrongAttempts++;
-							if (wrongAttempts==2){
+							if (wrongAttempts>=2){
 								error_marker = new L.Marker(new L.LatLng(coordinates[1],coordinates[0]), {icon: customHtmlIcon});
 								layerGroup.addLayer(error_marker);
-							}						
+								setTimeout(function(){
+								  		layerGroup.removeLayer(error_marker);
+									}, 4000);
+							}
 						}
 			    });
 			};
