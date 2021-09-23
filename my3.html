@@ -1,0 +1,1237 @@
+<html>
+	<head>
+		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+		<meta content="utf-8" http-equiv="encoding">
+
+		<title>
+			Utkarsh
+		</title>
+
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+		integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+		crossorigin=""/>
+
+		<!-- Make sure you put this AFTER Leaflet's CSS -->
+		<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+		integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+		crossorigin=""></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<style>
+
+			html, body{
+			    height: 100%;
+			    margin:0;
+			}
+			#beginscene {
+				display:block;
+				position:absolute;
+				margin: 0 auto;
+				padding:0px;
+				width: 100%;
+				height:100%;
+				background-color: rgba(197, 219, 224,0.8);
+				cursor: pointer;
+				z-index:30;
+			  	/*overflow: hidden;*/
+			}
+			#playbtn {
+				position:absolute;
+				margin: 0 auto;
+				left:50%;
+				top:50%;
+				transform: translate(-50%, -50%);
+				width: 14vmin;
+				height: 14vmin;
+			}
+			#taptoplay{
+				position:absolute;
+				margin: 0 auto;
+				left:50%;
+				top:65%;
+				transform: translate(-50%, -50%);
+				width: auto;
+				font-size:5vmin;
+				font-family :"Arial", Gadget, sans-serif;
+			}
+			#map { 
+				display:block;
+				position: absolute;
+				margin: 0 auto;
+				left:50%;
+				top:0%;
+				transform: translate(-50%, 0%);
+				width: 100%;
+				height: 95%;
+				z-index: 5;
+			}
+			#questionarea{
+				display: block;
+				position: absolute;
+				bottom:0px;
+				left:0px;
+				width: 100%;
+				height: 7%;
+				background-color:white;
+				z-index: 20;
+			}
+			#questiontext{
+				position: absolute;
+				margin: 0 auto;
+				padding: 0;
+				width: 100%;
+				left:50%;
+				top: 50%;
+				transform: translate(-50%,-50%);
+				text-align: center;
+				font-family :"Arial Black", Gadget, sans-serif;
+				font-size:5vmin;
+			}
+			#timer{
+				position: absolute;
+				display: none;
+				padding: 2px 5px 2px 8px;
+				border-radius: 5px 0px 0px 5px;
+				bottom:7%;
+				right: 0px;
+				width: auto;
+				/*height: 30px;*/
+				font-family :"Arial", Gadget, sans-serif;
+				font-size:4vmin;
+				background-color:  #5998a6;
+				z-index: 50;
+			}
+			#attempts{
+				position: absolute;
+				display: none;
+				padding: 2px 8px 2px 5px;
+				border-radius: 0px 5px 5px 0px;
+				bottom:7%;
+				left: 0px;
+				width: auto;
+				/*height: 30px;*/
+				font-family :"Arial", Gadget, sans-serif;
+				font-size:4vmin;
+				background-color:  #5998a6;
+				z-index: 50;
+			}
+			#gameover {
+				display:none;
+				position:absolute;
+				margin: 0 auto;
+				padding:0px;
+				width: 100%;
+				height:100%;
+				background-color: rgba(197, 219, 224,0.8);
+				z-index:30;
+			  	/*overflow: hidden;*/
+			}
+			#gameovertext{
+				position: absolute;
+				margin: 0 auto;
+				padding: 0;
+				width: 80%;
+				left:50%;
+				top: 50%;
+				transform: translate(-50%,-50%);
+				text-align: center;
+				font-family :"Arial Black", Gadget, sans-serif;
+				font-size:8vmin;
+				z-index: 30;
+			}
+			#stats{
+				display:inline-block;
+				padding: 1%;
+				border-style: solid;
+				border-radius: 10px;
+				z-index: 30;
+			}
+			#score,#duration,#accuracy,#totquestions{
+				font-size:4vmin;
+				font-family :"Arial", Gadget, sans-serif;
+			}
+			#Statsheading,{
+				color:black;
+				font-size:6vmin;
+				cursor: pointer;
+			}
+			#reload{
+				color:Orange;
+				font-size:10vmin;
+				cursor: pointer;
+			}
+
+			.shakeanim{
+				animation: shaking 0.5s;
+  				animation-iteration-count: 1;
+			}
+
+			#taptoplay{
+				animation: blinker 1s;
+  				animation-iteration-count: infinite;
+			}
+
+			.Click-here {
+			  position: absolute;
+			  display: none;
+			  right: 0px;
+			  top: 5%;
+			  cursor: pointer;
+			  background-image: linear-gradient(190deg, #f83600 0%, #fee140 100%);
+			  color: #fff;
+			  width: auto;
+			  border-radius: 20% 0% 0% 20%;
+			  text-align: center;
+			  font-size: 4vmin;
+			  padding: 1%;
+			  margin: 0 auto;
+			  transition:background-image 3s ease-in-out;
+			  z-index: 10000;
+			}
+			.Click-here:hover{
+			  transition:background-image 3s ease-in-out;
+			  background-image: linear-gradient(90deg, #fee140 0%, #f83600 100%);
+			}
+			.custom-model-main {
+			  text-align: center;
+			  overflow: hidden;
+			  position: fixed;
+			  top: 0;
+			  right: 0;
+			  bottom: 0;
+			  left: 0; /* z-index: 1050; */
+			  -webkit-overflow-scrolling: touch;
+			  outline: 0;
+			  opacity: 0;
+			  -webkit-transition: opacity 0.15s linear, z-index 0.15;
+			  -o-transition: opacity 0.15s linear, z-index 0.15;
+			  transition: opacity 0.15s linear, z-index 0.15;
+			  z-index: -1;
+			  overflow-x: hidden;
+			  overflow-y: auto;
+			}
+
+			.model-open {
+			  z-index: 99999;
+			  opacity: 1;
+			  overflow: hidden;
+			}
+			.custom-model-inner {
+			  -webkit-transform: translate(0, -25%);
+			  -ms-transform: translate(0, -25%);
+			  transform: translate(0, -25%);
+			  -webkit-transition: -webkit-transform 0.3s ease-out;
+			  -o-transition: -o-transform 0.3s ease-out;
+			  transition: -webkit-transform 0.3s ease-out;
+			  -o-transition: transform 0.3s ease-out;
+			  transition: transform 0.3s ease-out;
+			  transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
+			  display: inline-block;
+			  vertical-align: middle;
+			  width: 600px;
+			  margin: 30px auto;
+			  max-width: 97%;
+			}
+			.custom-model-wrap {
+			  display: block;
+			  width: 100%;
+			  position: relative;
+			  background-color: #fff;
+			  border: 1px solid #999;
+			  border: 1px solid rgba(0, 0, 0, 0.2);
+			  border-radius: 6px;
+			  -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+			  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+			  background-clip: padding-box;
+			  outline: 0;
+			  text-align: left;
+			  padding: 20px;
+			  -webkit-box-sizing: border-box;
+			  -moz-box-sizing: border-box;
+			  box-sizing: border-box;
+			  max-height: calc(100vh - 70px);
+				overflow-y: auto;
+			}
+			.model-open .custom-model-inner {
+			  -webkit-transform: translate(0, 0);
+			  -ms-transform: translate(0, 0);
+			  transform: translate(0, 0);
+			  position: relative;
+			  z-index: 999;
+			}
+			.model-open .bg-overlay {
+			  background: rgba(0, 0, 0, 0.6);
+			  z-index: 99;
+			}
+			.bg-overlay {
+			  background: rgba(0, 0, 0, 0);
+			  height: 100vh;
+			  width: 100%;
+			  position: fixed;
+			  left: 0;
+			  top: 0;
+			  right: 0;
+			  bottom: 0;
+			  z-index: 0;
+			  -webkit-transition: background 0.15s linear;
+			  -o-transition: background 0.15s linear;
+			  transition: background 0.15s linear;
+			}
+			.close-btn {
+			  position: absolute;
+			  right: 0;
+			  top: -30px;
+			  cursor: pointer;
+			  z-index: 99;
+			  font-size: 30px;
+			  color: #fff;
+			}
+
+			@media screen and (min-width:800px){
+				.custom-model-main:before {
+				  content: "";
+				  display: inline-block;
+				  height: auto;
+				  vertical-align: middle;
+				  margin-right: -0px;
+				  height: 100%;
+				}
+			}
+			@media screen and (max-width:799px){
+			  .custom-model-inner{margin-top: 45px;}
+			}
+
+			.map__marker {
+					  margin:0px;
+					  display: block;
+					  width: 1px;
+					  height: 1px;
+					  border-radius: 50%;
+					  background: #cca92c;
+					  box-shadow: 0 0 0 rgba(204,169,44, 0.4);
+					  animation: pulse 2s 2;
+					  z-index:4;
+					}
+			@keyframes pulse {
+			  0% {
+			    -moz-box-shadow: 0 0 0 0 rgba(204,169,44, 0.4);
+			    box-shadow: 0 0 0 0 rgba(204,169,44, 0.4);
+			  }
+			  70% {
+			      -moz-box-shadow: 0 0 0 500px rgba(204,169,44, 0);
+			      box-shadow: 0 0 0 500px rgba(204,169,44, 0);
+			  }
+			  100% {
+			      -moz-box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+			      box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+			  }
+			}
+
+			@keyframes blinker
+			{  
+			    0% { opacity: 1.0; }
+			    50% { opacity: 0.0; }
+			    100% { opacity: 1.0; }
+			}
+
+		</style>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	</head>
+	<body>
+
+		<div id="beginscene" onclick="off()">
+			<div id="playbtn">
+				<svg viewBox="0 0 26 26">
+				  <polygon class="play-btn__svg" points="9.33 6.69 9.33 19.39 19.3 13.04 9.33 6.69"/>
+				  <path class="play-btn__svg" d="M26,13A13,13,0,1,1,13,0,13,13,0,0,1,26,13ZM13,2.18A10.89,10.89,0,1,0,23.84,13.06,10.89,10.89,0,0,0,13,2.18Z"/>
+				</svg> 
+				<!-- <br><br><center></center> -->
+			</div>
+			<span id="taptoplay">Tap to Play</span>
+		</div>
+
+		<div class="Click-here"><i>i</i></div>        
+		<div class="custom-model-main">
+		    <div class="custom-model-inner">        
+		    <div class="close-btn">×</div>
+		        <div class="custom-model-wrap">
+		            <div class="pop-up-content-wrap">
+		               Not much!
+		            </div>
+		        </div>  
+		    </div>  
+		    <div class="bg-overlay"></div>
+		</div> 
+
+		<div id="map"></div>
+		<div id="questionarea">
+			<b><span id="questiontext">Get, Set, Go !</span></b>
+		</div>
+		<div id="timer">
+			<span id="mins">00:</span> <span id="seconds">00</span>
+		</div>
+		<div id="attempts">
+			<span id="numattempts">Attempts = 0</span>
+		</div>
+		<div id="gameover">
+			<b>
+				<div id="gameovertext">
+					<u><b>Game Over</b></u>
+					<br><br>
+					<span id="Statsheading">Stats</span><br>
+					<div id="stats">
+						<span id="totquestions">#Questions : </span>
+						<br>
+						<span id="score">#Attempts : </span>
+						<br>
+						<span id="accuracy">Accuracy : </span>
+						<br>
+						<span id="duration">Duration : </span>
+					</div>
+					<br>
+					<span id="reload"><b>&#x21bb;</b></span>
+				</div>
+			</b>
+			<br><!-- 
+			<b> Score : </b> <span id="gameovertext">Game Over</span>  
+			<br>
+			<b> Duration : </b> <span id="gameovertext">Game Over</span>   -->
+		</div>
+		<script>
+
+			console.log(window.screen.height);
+			console.log(window.screen.width);
+
+			var bounds = [[0,0], [Math.round(1734),Math.round(1486)]];
+			// var image1 = L.imageOverlay('india_auto_x2.png', bounds);
+			var image2 = L.imageOverlay('https://upload.wikimedia.org/wikipedia/commons/5/57/India-locator-map-blank.svg', bounds);
+
+			var map = L.map('map', {
+			    crs: L.CRS.Simple,
+			    minZoom: -2,
+			    maxZoom: 2,
+			    layers: [image2],
+			    zoomControl: true
+			});
+
+			bounds = L.latLngBounds(bounds);
+			map.fitBounds(bounds);
+			var center = bounds.getCenter();
+			map.setView(center, -1);
+
+			// var bounds = L.latLngBounds([[0, 0],[window.screen.height, window.screen.width]]);
+			// var wantedZoom = map.getBoundsZoom(bounds, true);
+			// console.log(wantedZoom); 
+			// var center = bounds.getCenter();
+			// map.setView(center, wantedZoom);
+
+
+
+			// var sol = L.latLng([ 330, 150 ]);
+			// L.marker(sol).addTo(map).bindPopup('Mumbai');
+
+			var southWest = L.latLng(0,0),
+			northEast = L.latLng(Math.round(1734),Math.round(1486));
+			var bounds = L.latLngBounds(southWest, northEast);
+
+			map.setMaxBounds(bounds);
+			map.on('drag', function() {
+			    map.panInsideBounds(bounds, { animate: false });
+			});
+
+			// function onEachFeature(feature, layer) {
+			//     // does this feature have a property named popupContent?
+			//     if (feature.properties && feature.properties.popupContent) {
+			//         layer.bindPopup(feature.properties.popupContent);
+			//     }
+			// }
+
+			// function onClick(e) {
+			//     alert(this.getLatLng());
+			// }
+
+			var layerGroup = L.featureGroup();
+
+
+			// function onEachFeatureFunction(feature,layer) {
+			// 	layerGroup.addLayer(layer);
+			// 	layer.on('click', function (e) {
+			//       console.log(feature.properties.name);
+			//     });
+			// }
+
+			var geojsonFeature = {
+			    "type": "FeatureCollection",
+			    "features":[
+			    	
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [932,1031.73]
+						},
+						"properties": {
+							"name": "Madhubani (Mithila Paintings)",
+							"target": "Bihar",
+							"info": "No shading, 2D paintings, double line border, Symbolic - eg. Fish depicts good luck and fertility. Traditionally painted on walls using rice paste.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [863,751.75]
+						},
+						"properties": {
+							"name": "Pattachitra",
+							"target": "Odisha",
+							"info": "Base of painting is treated cloth while the colours are natural. No pencil or charcoal is used, only brush. Inspired from Jagannath cult. Raghurajpur in Odisha is know for this art form. When painted on 'palm leaves' then it is known as 'Talapattachitra'.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [932,1031.73]
+						},
+						"properties": {
+							"name": "Tikuli Art",
+							"target": "Bihar",
+							"info": "Local term for 'Bindi'. Painting is done on hardboard and then is cut in various shapes. Madhubani motifs are used in it.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1034,877.87]
+						},
+						"properties": {
+							"name": "Patua",
+							"target": "West Bengal",
+							"info": "Done on scrolls(pat) by scroll painters(patuas). Paitings of God and Goddesses. Most Patuas are Muslims. Traditionally done on cloth, now done on sheets commenting on political and social issues.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [897,902.83]
+						},
+						"properties": {
+							"name": "Paitkar",
+							"target": "Jharkhand",
+							"info": "By tribal people on scrolls. Has cultural association with 'Ma Mansa'. The common theme of paintings is 'What happens to human life post death'. On verge of extinction.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [576,437.58]
+						},
+						"properties": {
+							"name": "Kalamkari",
+							"target": "Andhra Pradesh",
+							"info": "Pen(kalam) is made of sharp pointed bamboo. Base is cotton fabric. Inspired from Hindu mythology. Existed even during Vijaynagar empire.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [407,693.72]
+						},
+						"properties": {
+							"name": "Warli",
+							"target": ["Maharastra","Gujarat"],
+							"info": "From 3000 BC. By 'Warlis' indigenous people at Maharastra-Gujarat border. Similar to Bhimbetka paintings. Have a central motif of a 'chaukat' or 'chauk'. Traditionally done on walls using basic designs like triangles, circles or sqaures to represent humans or animals. Base is of 'red ochre' colour and for painting only 'White' pigment is used. Now a days even painted on sarees.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1041.5,1139.54]
+						},
+						"properties": {
+							"name": "Thangka",
+							"target": ["Sikkim","Himachal Pradesh", "Ladakh", "Arunachal Pradesh"],
+							"info": "Presently belongs to Sikkim, Himachal Pradesh, Ladakh and Arunachal Pradesh. Traditionally made by Buddhist monks. Base is cotton canvas. Each colour has a meaning.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [932,1031.73]
+						},
+						"properties": {
+							"name": "Manjusha",
+							"target": "Bihar",
+							"info": "Belongs to Bhagalpur region. Also known as 'Angika art'(~Mahajanpad). Also called 'Snake painting' since snake motifs are present. On boxes of jute and paper.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [318,1093.77]
+						},
+						"properties": {
+							"name": "Phad",
+							"target": "Rajasthan",
+							"info": "Scroll-type art. Religious in nature and comprises of drawing of local deities, 'Pabuji' and 'Devnarayan'. Painted on long piece of cloth called 'Phad'.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [581,605.67]
+						},
+						"properties": {
+							"name": "Cheriyal",
+							"target": "Telangana",
+							"info": "Type of 'Nakashi art'. The scrolls are depicted as a continuous story like comics or ballad. By the 'Balladeer community'. Themes are Hindu epics. Often huge in size upto 45 ft in height.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [548,895.66]
+						},
+						"properties": {
+							"name": "Pithora",
+							"target": ["Madhya Pradesh","Gujarat"],
+							"info": "By tribal communities of Gujarat and M.P.. Painted on walls of house to bring peacee and prosperity. Depection of animals are common, especially 'Horses'.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [863,751.75]
+						},
+						"properties": {
+							"name": "Saura",
+							"target": "Odisha",
+							"info": "By Saura tribes of Odisha. Similar to Warli paintings. It is a wall painting and is ritualistic, dedicated to 'Idital', their main diety. Human shapes are geometrical and stick-like.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [318,1093.77]
+						},
+						"properties": {
+							"name": "Painter-Sahibdin",
+							"target": "Rajasthan",
+							"info": "17th century painter of early Mewar school of paintings. Depiction of literary texts - 'the Rangamala', the Ramayana etc.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [318,1093.77]
+						},
+						"properties": {
+							"name": "Tamasha paintings",
+							"target": "Rajasthan",
+							"info": "In later Mewar school of paitings. Show court ceremonial and city views in unprecedented details. Developed after death of Sahibdin.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [318,1093.77]
+						},
+						"properties": {
+							"name": "Dhundar school",
+							"target": "Rajasthan",
+							"info": "Also called 'Amber school'. Reached pinnacle in the period of Sawai Pratap Singh in 18th century. Evidences at Bairat.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [318,1093.77]
+						},
+						"properties": {
+							"name": "Kishangarh school",
+							"target": "Rajasthan",
+							"info": "Came under Marwar school (Jodhpur and Bikaner). Associated with romantic legends of Sawant Singh and his beloved Bani Thani. Bani Thani painted by Nihal Chand.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [318,1093.77]
+						},
+						"properties": {
+							"name": "Bundi school (or Hadoti school)",
+							"target": "Rajasthan",
+							"info": "Came under Marwar school (Jodhpur and Bikaner). At Bundi and Kota.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [392,1479.97]
+						},
+						"properties": {
+							"name": "Basholi school",
+							"target": "Jammu and Kashmir",
+							"info": "Paintings of Pahari school in 17th century were from Basholi of J&K. They were miniature paintings. eg. - 'Rasamanjari'. Famous patron was - Raja Kirpal Singh.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [490,1383.93]
+						},
+						"properties": {
+							"name": "Kangra school",
+							"target": "Himachal Pradesh",
+							"info": "Developed after decline of Mughals, from 18th century. Zenith reached under 'Raja Sansar Chand'. Love scenes of Krishna was very prominent. Also a group of paintings called 'Twelve months'. ",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [436,187.4]
+						},
+						"properties": {
+							"name": "Ladies in the moonlight (and Sakuntala)",
+							"target": "Kerala",
+							"info": "By Raja Ravi Verma of Kerela (1848-1906).",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [436,187.4]
+						},
+						"properties": {
+							"name": "Ravana kidnapping Sita and killing Jatayu",
+							"target": "Kerala",
+							"info": "By Raja Ravi Verma of Kerela (1848-1906).",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1034,877.87]
+						},
+						"properties": {
+							"name": "Arabian night series (and Bharat Mata)",
+							"target": "West Bengal",
+							"info": "By Abanindranath Tagore.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1034,877.87]
+						},
+						"properties": {
+							"name": "Gandhi sketch of Dandi march (a linocut)",
+							"target": "West Bengal",
+							"info": "By Nandalal Bose. Also illuminated the Consititution.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [318,1093.77]
+						},
+						"properties": {
+							"name": "Maru Ragini",
+							"target": "Rajasthan",
+							"info": "It is a Tempera painting done by sahibdin, a famous painter of Mewar School. King and his queen are riding on a well decorated camel in desert.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [318,1093.77]
+						},
+						"properties": {
+							"name": "Raja Aniurudh Singh hara's painting",
+							"target": "Rajasthan",
+							"info": "Bundi School. Utkal Ram of Bundi did portrait of Raja Anirudh Singh Hara. The painting shows the Raja on the back of a horse. He is dressed in typically Mughal costume along with turban.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [318,1093.77]
+						},
+						"properties": {
+							"name": "'Krishna on swing' painting",
+							"target": "Rajasthan",
+							"info": "Bikaner (Jodhpur) School. By Nuruddin. Radha sitting in front of him in the balcony is wearing traditional but decorated Ghagra.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [318,1093.77]
+						},
+						"properties": {
+							"name": "Radha (Bani Thani)",
+							"target": "Rajasthan",
+							"info": "Kishangarh school. The painting by Nihal Chand of Kishangarh of Rajasthani School has a special place in the treasure of Indian miniature painting. Her long tapering finger of the left hand is holding two Lotus Buds.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [318,1093.77]
+						},
+						"properties": {
+							"name": "Chaugan Player painting",
+							"target": "Rajasthan",
+							"info": "Jodhpur School. This painting is painted by 'Dana' in jodhpur style of Rajasthani miniature painting.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [318,1093.77]
+						},
+						"properties": {
+							"name": "Bharat meets Rama at Chitrakut",
+							"target": "Rajasthan",
+							"info": "Jaipur School. Painted by talented artist Guman in 18th century. Bharat came to chitrakut for taking back his elder brother rama to ayodhya with three mother and gurus.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [392,1479.97]
+						},
+						"properties": {
+							"name": "Krishna with Gopis",
+							"target": "Jammu and Kashmir",
+							"info": "Basholi school. Painted by famous painter Manku.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [490,1383.93]
+						},
+						"properties": {
+							"name": "Depiction of Ashta Nayikas",
+							"target": "Himachal Pradesh",
+							"info": "Kangra school. Depiction of Ashta Nayikas or eight heroines is one of the most painted themes in Pahari paintings, involving the depiction of women in various dispositions and emotive states.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [490,1383.93]
+						},
+						"properties": {
+							"name": "Nanda, Yashoda and Krishna",
+							"target": "Himachal Pradesh",
+							"info": "Kangra school. By Nainsukh. In this painting a journey of nand, Yashoda, Krishna and kinsmen going to  Vrindavan has been depicted.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [498.5,1194.46]
+						},
+						"properties": {
+							"name": "Noah’s Ark",
+							"target": "New Delhi",
+							"info": "Noah’s Ark, in a painted manuscript of 1590, by 'Miskin', one of the masters at Akbar’s imperial atelier. Prophet Noah is in the ark, which is carrying animals in pairs.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [498.5,1194.46]
+						},
+						"properties": {
+							"name": "Krishna Lifts Mount Govardhan",
+							"target": "New Delhi",
+							"info": "Famous artist miskin of Akbar period did this painting.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [498.5,1194.46]
+						},
+						"properties": {
+							"name": "Falcon on  a Bird Rest",
+							"target": "New Delhi",
+							"info": "By Ustad Mansur, Nadir ul Asr, a title received from Jahangir.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [581,605.67]
+						},
+						"properties": {
+							"name": "Hazrat Nizamuddin Auliya and Amir Khusrau",
+							"target": "Telangana",
+							"info": "From Hyderabad, Deccan.",
+						},
+					},
+			    ]
+			};
+
+
+			let out = geojsonFeature.features.reduce((acc, {properties}) =>
+			{
+			    Object.entries(properties).forEach(([key, val]) =>
+			    {
+			        acc[key] = acc[key] || new Array();
+			        acc[key].push(val);
+			    });
+
+			    return acc;
+			}, {});
+
+			let out_2 = geojsonFeature.features.reduce((acc, {geometry}) =>
+			{
+			    Object.entries(geometry).forEach(([key, val]) =>
+			    {
+			        acc[key] = acc[key] || new Array();
+			        acc[key].push(val);
+			    });
+
+			    return acc;
+			}, {});
+
+			var geojsonMarkerOptions = {
+			    radius: 8,
+			    fillColor: "orange",
+			    color: "#000",
+			    weight: 1,
+			    opacity: 1,
+			    fillOpacity: 0.8
+			};
+
+			L.geoJSON(geojsonFeature, {
+			    onEachFeature: onEachFeatureFunction,
+			    pointToLayer: function (feature, latlng) {
+			        return L.circleMarker(latlng, geojsonMarkerOptions);
+			    }
+			});
+
+			var baseMaps = {
+				"Streets": image2,
+			};
+
+
+			map.panTo(new L.LatLng(Math.round(1734*0.5),Math.round(1486*0.5)));
+
+			// map.on("click", function(e){
+			// 	layerGroup.addLayer(new L.circleMarker([e.latlng.lat, e.latlng.lng],geojsonMarkerOptions));
+			// 	var place_name = prompt("Please enter the name", "");
+			// 	var place_target = prompt("Please enter the target", "");
+			// 	console.log("{\"type\":\"Feature\",\n\"geometry\": {\"type\": \"Point\",\"coordinates\": ["+Math.round(e.latlng.lng*100)/100+","+Math.round(e.latlng.lat*100)/100+"]},\n\"properties\": {\"name\": \""+place_name+"\",\n\"target\": \""+place_target+"\"}}");
+			// });
+
+
+			function shuffle(array) {
+			  var currentIndex = array.length, temporaryValue, randomIndex;
+			   // Fisher-Yates (aka Knuth) Shuffle
+			  // While there remain elements to shuffle...
+			  while (0 !== currentIndex) {
+
+			    // Pick a remaining element...
+			    randomIndex = Math.floor(Math.random() * currentIndex);
+			    currentIndex -= 1;
+
+			    // And swap it with the current element.
+			    temporaryValue = array[currentIndex];
+			    array[currentIndex] = array[randomIndex];
+			    array[randomIndex] = temporaryValue;
+
+			  }
+
+			  return array;
+			};
+
+			$('#taptoplay').fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(200, function(){});
+
+			function blink_text(){
+			   $('#questiontext').fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(200, function() {
+					// $('#quesmark').addClass('blink_me');
+				});
+			};
+
+			function startTimer(){
+		  		timex = setTimeout(function(){
+	      		seconds++;
+			    if(seconds >59)
+			    	{
+		    			seconds=0;mins++;                
+					    if(mins<10)
+					    {                     
+					      $("#mins").text('0'+mins+':');
+					  	}       
+				       	else if(mins<=59)
+				       	{
+				       		$("#mins").text(mins+':')
+				       	}
+				       	else{
+				       		mins=0;
+				       		// Time limit exceed : Game Over : Genrate end signal
+				       	}
+	              	}    
+			    if(seconds <10) 
+			    {
+			      $("#seconds").text('0'+seconds);
+			  	} 
+		      	else 
+		      	{
+			      $("#seconds").text(seconds);
+			    }
+	      		startTimer();
+			  	},999);
+			};
+
+			var currentQuestion;
+			var shuffleoutput, questionList, targetList, questionListLength, originalQuestionList, infoList;
+			var correctTally, wrongAttempts, allwrongAttempts, num_attempts;
+			var hours,mins, seconds;
+			var error_marker;
+			var replayed =0;
+			var gametitle = "Paintings of Indian States";
+			map.removeControl(map.zoomControl);
+			$('#questiontext').text(gametitle);
+
+			var correct_audio = new Audio('click_sound.mp3');
+			
+			function ask_question(currentQuestion,questionList,targetList){
+				let ques_text = questionList[currentQuestion];
+				if(typeof targetList[currentQuestion]!=='string'){
+						ques_text += " *";
+					}
+				return ques_text;
+			}
+
+			L.HtmlIcon = L.Icon.extend({
+							options: {
+								/*
+								html: (String) (required)
+								iconAnchor: (Point)
+								popupAnchor: (Point)
+								*/
+							},
+
+							initialize: function (options) {
+								L.Util.setOptions(this, options);
+							},
+
+							createIcon: function () {
+								var div = document.createElement('div');
+								div.innerHTML = this.options.html;
+								return div;
+							},
+
+							createShadow: function () {
+								return null;
+							}
+						});
+
+			const HTMLIcon = L.HtmlIcon.extend({
+			    options : {
+			        html : "<div class=\"map__marker\"></div>",
+			    }
+			});
+			const customHtmlIcon = new HTMLIcon();
+
+
+			function off() {
+				if (replayed===0){
+					map.addControl(map.zoomControl);
+					$(".Click-here").css('display','block');
+					layerGroup.addTo(map);
+					// L.control.layers(baseMaps, {
+					// 	"Cities": layerGroup.addTo(map)
+					// }).addTo(map);
+
+				}
+
+				currentQuestion=0;
+				originalQuestionList = Array.from(out["name"]);
+				tempcoordinatesList = Array.from(out_2["coordinates"]);
+				questionList = shuffle(originalQuestionList.slice());
+				var temptargetList = Array.from(out["target"]);
+				var tempinfoList = Array.from(out["info"]);
+				targetList = new Array(temptargetList.length);
+				infoList = new Array(tempinfoList.length);
+				corrdinateList = new Array(temptargetList.length);
+				for (let i = 0; i < questionList.length; i++) {
+				  var index = originalQuestionList.indexOf(questionList[i]);
+				  targetList[i]=temptargetList[index];
+				  corrdinateList[i]=tempcoordinatesList[index];
+				  infoList[i]=tempinfoList[index];
+				} 
+				// console.log(originalQuestionList,questionList);
+				// console.log(temptargetList,targetList);
+				questionListLength = questionList.length;
+				correctTally=0;
+				wrongAttempts=0;
+				allwrongAttempts=0;
+				num_attempts=0;
+				hours =0;
+				mins =0;
+				seconds =0;
+				$('#beginscene').fadeOut(250, function() {
+					$('#map').css('display','block');
+					let currentq = ask_question(currentQuestion,questionList,targetList);
+					$('#questiontext').text(currentq);
+					$('#questionarea').css('display','block');
+					$(".Click-here").text();
+					$('#attempts').fadeIn(100, function() {});	
+					$('#timer').fadeIn(100, function() {});	
+					blink_text();
+					startTimer();
+					// totlen = myQuiz.questionList.length;
+					// $('#score').text('0 / '+totlen);
+				});
+			}
+
+			function onEachFeatureFunction(feature,layer) {
+				layerGroup.addLayer(layer);
+				layer.on('click', function (e) {					
+					var choice = feature.properties.target;
+					var coordinates = corrdinateList[currentQuestion];
+					if(typeof choice !== 'string'){
+						choice = choice[0];
+					}
+					num_attempts = num_attempts+1;
+					$('#numattempts').text("Attempts = "+(num_attempts));
+					var check_answer=false;
+					console.log(choice,targetList[currentQuestion]);
+					if(typeof targetList[currentQuestion]==='string'){
+						check_answer = (choice === targetList[currentQuestion]);
+					}
+					else{
+						check_answer = targetList[currentQuestion].includes(choice);
+					}
+					try {
+				  		layerGroup.removeLayer(error_marker);
+					}
+					catch(err) {
+				  		//not present
+					}
+					if (check_answer){
+						correct_audio.play();
+						currentQuestion++;
+						correctTally++;
+						wrongAttempts=0;
+						if (currentQuestion < questionListLength){
+							let nextq = ask_question(currentQuestion,questionList,targetList);
+							$('#questiontext').text(nextq);
+							blink_text();
+						}
+						else{
+								setTimeout(function(){
+									// $('#questionarea').css('display','none');
+									$('#timer').css('display','none');
+									$('#attempts').css('display','none');
+									$('#totquestions').html("<b>#Questions = </b> " + questionListLength);
+									$('#score').html("<b>#Attempts = </b> " + (num_attempts));
+									$('#accuracy').html("<b>Accuracy = </b> " + Math.round((questionListLength/num_attempts)*10000)/100+"%");
+									$('#duration').html("<b>Duration = </b> " + mins +"m "+ seconds+"s");
+									$('#gameover').fadeIn(250, function() {
+										//do something
+									});
+									clearTimeout(timex);
+									$('#questiontext').html('Game Over!');
+									$("#reload").click(function(){
+										replayed++;
+										num_attempts = 0;
+										hours =0;
+										mins =0;
+										seconds =0;
+										$('#numattempts').text("Attempts = "+(num_attempts));
+										$("#mins").text('0'+mins+':');
+										$("#seconds").text('0'+seconds);
+										$('#questiontext').text(gametitle);
+										$('#beginscene').fadeIn(200, function() {
+											$('#gameover').fadeOut(100, function() {
+												
+											});
+										});
+										$('#questionarea').css('display','none');
+									}); 
+								}, 250);
+							}
+					}
+					else{
+							$("#questiontext").css("color", "red");
+							setTimeout(function(){
+						  		$("#questiontext").css("color", "black");
+						  		setTimeout(function(){
+							  		$("#questiontext").css("color", "red");
+							  		setTimeout(function(){
+								  		$("#questiontext").css("color", "black");
+									}, 100);
+								}, 100);
+							}, 100);
+							wrongAttempts++;
+							allwrongAttempts++;
+							if (wrongAttempts>=2){
+								error_marker = new L.Marker(new L.LatLng(coordinates[1],coordinates[0]), {icon: customHtmlIcon});
+								error_marker.setZIndexOffset(-100);
+								layerGroup.addLayer(error_marker);
+								console.log('added');
+								setTimeout(function(){
+								  		layerGroup.removeLayer(error_marker);
+								  		console.log('removed');
+									}, 4000);
+							}
+						}
+			    });
+			};
+
+			$(".Click-here").on('click', function() {
+			  $(".custom-model-main").addClass('model-open');
+			  var current_info = infoList[currentQuestion];
+			  $(".pop-up-content-wrap").text(current_info);
+
+			}); 
+			$(".close-btn, .bg-overlay").click(function(){
+			  $(".custom-model-main").removeClass('model-open');
+			});
+
+		</script>
+	</body>
+</html>

@@ -1,0 +1,1249 @@
+<html>
+	<head>
+		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+		<meta content="utf-8" http-equiv="encoding">
+
+		<title>
+			Utkarsh
+		</title>
+
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+		integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+		crossorigin=""/>
+
+		<!-- Make sure you put this AFTER Leaflet's CSS -->
+		<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+		integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+		crossorigin=""></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<style>
+
+			html, body{
+			    height: 100%;
+			    margin:0;
+			}
+			#beginscene {
+				display:block;
+				position:absolute;
+				margin: 0 auto;
+				padding:0px;
+				width: 100%;
+				height:100%;
+				background-color: rgba(197, 219, 224,0.8);
+				cursor: pointer;
+				z-index:30;
+			  	/*overflow: hidden;*/
+			}
+			#playbtn {
+				position:absolute;
+				margin: 0 auto;
+				left:50%;
+				top:50%;
+				transform: translate(-50%, -50%);
+				width: 14vmin;
+				height: 14vmin;
+			}
+			#taptoplay{
+				position:absolute;
+				margin: 0 auto;
+				left:50%;
+				top:65%;
+				transform: translate(-50%, -50%);
+				width: auto;
+				font-size:5vmin;
+				font-family :"Arial", Gadget, sans-serif;
+			}
+			#map { 
+				display:block;
+				position: absolute;
+				margin: 0 auto;
+				left:50%;
+				top:0%;
+				transform: translate(-50%, 0%);
+				width: 100%;
+				height: 95%;
+				z-index: 5;
+			}
+			#questionarea{
+				display: block;
+				position: absolute;
+				bottom:0px;
+				left:0px;
+				width: 100%;
+				height: 7%;
+				background-color:white;
+				z-index: 20;
+			}
+			#questiontext{
+				position: absolute;
+				margin: 0 auto;
+				padding: 0;
+				width: 100%;
+				left:50%;
+				top: 50%;
+				transform: translate(-50%,-50%);
+				text-align: center;
+				font-family :"Arial Black", Gadget, sans-serif;
+				font-size:5vmin;
+			}
+			#timer{
+				position: absolute;
+				display: none;
+				padding: 2px 5px 2px 8px;
+				border-radius: 5px 0px 0px 5px;
+				bottom:7%;
+				right: 0px;
+				width: auto;
+				/*height: 30px;*/
+				font-family :"Arial", Gadget, sans-serif;
+				font-size:4vmin;
+				background-color:  #5998a6;
+				z-index: 50;
+			}
+			#attempts{
+				position: absolute;
+				display: none;
+				padding: 2px 8px 2px 5px;
+				border-radius: 0px 5px 5px 0px;
+				bottom:7%;
+				left: 0px;
+				width: auto;
+				/*height: 30px;*/
+				font-family :"Arial", Gadget, sans-serif;
+				font-size:4vmin;
+				background-color:  #5998a6;
+				z-index: 50;
+			}
+			#gameover {
+				display:none;
+				position:absolute;
+				margin: 0 auto;
+				padding:0px;
+				width: 100%;
+				height:100%;
+				background-color: rgba(197, 219, 224,0.8);
+				z-index:30;
+			  	/*overflow: hidden;*/
+			}
+			#gameovertext{
+				position: absolute;
+				margin: 0 auto;
+				padding: 0;
+				width: 80%;
+				left:50%;
+				top: 50%;
+				transform: translate(-50%,-50%);
+				text-align: center;
+				font-family :"Arial Black", Gadget, sans-serif;
+				font-size:8vmin;
+				z-index: 30;
+			}
+			#stats{
+				display:inline-block;
+				padding: 1%;
+				border-style: solid;
+				border-radius: 10px;
+				z-index: 30;
+			}
+			#score,#duration,#accuracy,#totquestions{
+				font-size:4vmin;
+				font-family :"Arial", Gadget, sans-serif;
+			}
+			#Statsheading,{
+				color:black;
+				font-size:6vmin;
+				cursor: pointer;
+			}
+			#reload{
+				color:Orange;
+				font-size:10vmin;
+				cursor: pointer;
+			}
+
+			.shakeanim{
+				animation: shaking 0.5s;
+  				animation-iteration-count: 1;
+			}
+
+			#taptoplay{
+				animation: blinker 1s;
+  				animation-iteration-count: infinite;
+			}
+
+			.Click-here {
+			  position: absolute;
+			  display: none;
+			  right: 0px;
+			  top: 5%;
+			  cursor: pointer;
+			  background-image: linear-gradient(190deg, #f83600 0%, #fee140 100%);
+			  color: #fff;
+			  width: auto;
+			  border-radius: 20% 0% 0% 20%;
+			  text-align: center;
+			  font-size: 4vmin;
+			  padding: 1%;
+			  margin: 0 auto;
+			  transition:background-image 3s ease-in-out;
+			  z-index: 10000;
+			}
+			.Click-here:hover{
+			  transition:background-image 3s ease-in-out;
+			  background-image: linear-gradient(90deg, #fee140 0%, #f83600 100%);
+			}
+			.custom-model-main {
+			  text-align: center;
+			  overflow: hidden;
+			  position: fixed;
+			  top: 0;
+			  right: 0;
+			  bottom: 0;
+			  left: 0; /* z-index: 1050; */
+			  -webkit-overflow-scrolling: touch;
+			  outline: 0;
+			  opacity: 0;
+			  -webkit-transition: opacity 0.15s linear, z-index 0.15;
+			  -o-transition: opacity 0.15s linear, z-index 0.15;
+			  transition: opacity 0.15s linear, z-index 0.15;
+			  z-index: -1;
+			  overflow-x: hidden;
+			  overflow-y: auto;
+			}
+
+			.model-open {
+			  z-index: 99999;
+			  opacity: 1;
+			  overflow: hidden;
+			}
+			.custom-model-inner {
+			  -webkit-transform: translate(0, -25%);
+			  -ms-transform: translate(0, -25%);
+			  transform: translate(0, -25%);
+			  -webkit-transition: -webkit-transform 0.3s ease-out;
+			  -o-transition: -o-transform 0.3s ease-out;
+			  transition: -webkit-transform 0.3s ease-out;
+			  -o-transition: transform 0.3s ease-out;
+			  transition: transform 0.3s ease-out;
+			  transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
+			  display: inline-block;
+			  vertical-align: middle;
+			  width: 600px;
+			  margin: 30px auto;
+			  max-width: 97%;
+			}
+			.custom-model-wrap {
+			  display: block;
+			  width: 100%;
+			  position: relative;
+			  background-color: #fff;
+			  border: 1px solid #999;
+			  border: 1px solid rgba(0, 0, 0, 0.2);
+			  border-radius: 6px;
+			  -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+			  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+			  background-clip: padding-box;
+			  outline: 0;
+			  text-align: left;
+			  padding: 20px;
+			  -webkit-box-sizing: border-box;
+			  -moz-box-sizing: border-box;
+			  box-sizing: border-box;
+			  max-height: calc(100vh - 70px);
+				overflow-y: auto;
+			}
+			.model-open .custom-model-inner {
+			  -webkit-transform: translate(0, 0);
+			  -ms-transform: translate(0, 0);
+			  transform: translate(0, 0);
+			  position: relative;
+			  z-index: 999;
+			}
+			.model-open .bg-overlay {
+			  background: rgba(0, 0, 0, 0.6);
+			  z-index: 99;
+			}
+			.bg-overlay {
+			  background: rgba(0, 0, 0, 0);
+			  height: 100vh;
+			  width: 100%;
+			  position: fixed;
+			  left: 0;
+			  top: 0;
+			  right: 0;
+			  bottom: 0;
+			  z-index: 0;
+			  -webkit-transition: background 0.15s linear;
+			  -o-transition: background 0.15s linear;
+			  transition: background 0.15s linear;
+			}
+			.close-btn {
+			  position: absolute;
+			  right: 0;
+			  top: -30px;
+			  cursor: pointer;
+			  z-index: 99;
+			  font-size: 30px;
+			  color: #fff;
+			}
+
+			@media screen and (min-width:800px){
+				.custom-model-main:before {
+				  content: "";
+				  display: inline-block;
+				  height: auto;
+				  vertical-align: middle;
+				  margin-right: -0px;
+				  height: 100%;
+				}
+			}
+			@media screen and (max-width:799px){
+			  .custom-model-inner{margin-top: 45px;}
+			}
+
+			.map__marker {
+					  margin:0px;
+					  display: block;
+					  width: 1px;
+					  height: 1px;
+					  border-radius: 50%;
+					  background: #cca92c;
+					  box-shadow: 0 0 0 rgba(204,169,44, 0.4);
+					  animation: pulse 2s 2;
+					  z-index:4;
+					}
+			@keyframes pulse {
+			  0% {
+			    -moz-box-shadow: 0 0 0 0 rgba(204,169,44, 0.4);
+			    box-shadow: 0 0 0 0 rgba(204,169,44, 0.4);
+			  }
+			  70% {
+			      -moz-box-shadow: 0 0 0 500px rgba(204,169,44, 0);
+			      box-shadow: 0 0 0 500px rgba(204,169,44, 0);
+			  }
+			  100% {
+			      -moz-box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+			      box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+			  }
+			}
+
+			@keyframes blinker
+			{  
+			    0% { opacity: 1.0; }
+			    50% { opacity: 0.0; }
+			    100% { opacity: 1.0; }
+			}
+
+		</style>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	</head>
+	<body>
+
+		<div id="beginscene" onclick="off()">
+			<div id="playbtn">
+				<svg viewBox="0 0 26 26">
+				  <polygon class="play-btn__svg" points="9.33 6.69 9.33 19.39 19.3 13.04 9.33 6.69"/>
+				  <path class="play-btn__svg" d="M26,13A13,13,0,1,1,13,0,13,13,0,0,1,26,13ZM13,2.18A10.89,10.89,0,1,0,23.84,13.06,10.89,10.89,0,0,0,13,2.18Z"/>
+				</svg> 
+				<!-- <br><br><center></center> -->
+			</div>
+			<span id="taptoplay">Tap to Play</span>
+		</div>
+
+		<div class="Click-here"><i>i</i></div>        
+		<div class="custom-model-main">
+		    <div class="custom-model-inner">        
+		    <div class="close-btn">×</div>
+		        <div class="custom-model-wrap">
+		            <div class="pop-up-content-wrap">
+		               Not much!
+		            </div>
+		        </div>  
+		    </div>  
+		    <div class="bg-overlay"></div>
+		</div> 
+
+		<div id="map"></div>
+		<div id="questionarea">
+			<b><span id="questiontext">Get, Set, Go !</span></b>
+		</div>
+		<div id="timer">
+			<span id="mins">00:</span> <span id="seconds">00</span>
+		</div>
+		<div id="attempts">
+			<span id="numattempts">Attempts = 0</span>
+		</div>
+		<div id="gameover">
+			<b>
+				<div id="gameovertext">
+					<u><b>Game Over</b></u>
+					<br><br>
+					<span id="Statsheading">Stats</span><br>
+					<div id="stats">
+						<span id="totquestions">#Questions : </span>
+						<br>
+						<span id="score">#Attempts : </span>
+						<br>
+						<span id="accuracy">Accuracy : </span>
+						<br>
+						<span id="duration">Duration : </span>
+					</div>
+					<br>
+					<span id="reload"><b>&#x21bb;</b></span>
+				</div>
+			</b>
+			<br><!-- 
+			<b> Score : </b> <span id="gameovertext">Game Over</span>  
+			<br>
+			<b> Duration : </b> <span id="gameovertext">Game Over</span>   -->
+		</div>
+		<script>
+
+			console.log(window.screen.height);
+			console.log(window.screen.width);
+
+			var bounds = [[0,0], [Math.round(1734),Math.round(1486)]];
+			// var image1 = L.imageOverlay('india_auto_x2.png', bounds);
+			var image2 = L.imageOverlay('https://upload.wikimedia.org/wikipedia/commons/5/57/India-locator-map-blank.svg', bounds);
+
+			var map = L.map('map', {
+			    crs: L.CRS.Simple,
+			    minZoom: -2,
+			    maxZoom: 2,
+			    layers: [image2],
+			    zoomControl: true
+			});
+
+			bounds = L.latLngBounds(bounds);
+			map.fitBounds(bounds);
+			var center = bounds.getCenter();
+			map.setView(center, -1);
+
+			// var bounds = L.latLngBounds([[0, 0],[window.screen.height, window.screen.width]]);
+			// var wantedZoom = map.getBoundsZoom(bounds, true);
+			// console.log(wantedZoom); 
+			// var center = bounds.getCenter();
+			// map.setView(center, wantedZoom);
+
+
+
+			// var sol = L.latLng([ 330, 150 ]);
+			// L.marker(sol).addTo(map).bindPopup('Mumbai');
+
+			var southWest = L.latLng(0,0),
+			northEast = L.latLng(Math.round(1734),Math.round(1486));
+			var bounds = L.latLngBounds(southWest, northEast);
+
+			map.setMaxBounds(bounds);
+			map.on('drag', function() {
+			    map.panInsideBounds(bounds, { animate: false });
+			});
+
+			// function onEachFeature(feature, layer) {
+			//     // does this feature have a property named popupContent?
+			//     if (feature.properties && feature.properties.popupContent) {
+			//         layer.bindPopup(feature.properties.popupContent);
+			//     }
+			// }
+
+			// function onClick(e) {
+			//     alert(this.getLatLng());
+			// }
+
+			var layerGroup = L.featureGroup();
+
+
+			// function onEachFeatureFunction(feature,layer) {
+			// 	layerGroup.addLayer(layer);
+			// 	layer.on('click', function (e) {
+			//       console.log(feature.properties.name);
+			//     });
+			// }
+
+			var geojsonFeature = {
+			    "type": "FeatureCollection",
+			    "features":[
+			    	
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [668,1100]
+						},
+						"properties": {
+							"name": "Thumri",
+							"target": "Uttar Pradesh",
+							"info": "Based on mixed ragas and is commonly considered to be semi-classical Indian music. Usually revolves around a girl's love for Krishna. In Braj Bhasa dailect. Linked with Kathak dance. Main gharanas in Varanasi and Lucknow. eg. Begum Akhtar.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1034,877.87]
+						},
+						"properties": {
+							"name": "Baul",
+							"target": ["West Bengal", "Assam", "Tripura"],
+							"info": "A Bengali religious sect. Represents a long heritage of preaching mysticism through songs in West Bengal, Assam and Tripura. Carry influences of both Bhakti and Sufi movements. Mainly belong to either Vaishanava or Sufi sects.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [392,1479.97]
+						},
+						"properties": {
+							"name": "Wanawan",
+							"target": "Jammu and Kashmir",
+							"info": "Specially sung during wedding ceremonies.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [734,778.76]
+						},
+						"properties": {
+							"name": "Pandavani",
+							"target": "Chhattisgarh",
+							"info": "Based on the Mahabharata and 'Bhima' as hero. Usually set to the rythms of 'tambura'. Popular in Chhattisgarh and its adjoining states. eg. Teejan Bai, who won Padma Shri, Bhusan and Vibhushan.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [548,895.66]
+						},
+						"properties": {
+							"name": "Alha",
+							"target": "Madhya Pradesh",
+							"info": "A heroic ballad song. Usually sung in different languages like Braj, Awadhi and Bhojpuri. Related to Mahabharata, as the try to glorify the heroes who are seen as reincarnation of the Pandavas - Alha, Udal, Malkhan, Lakhan and Deva.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [318,1093.77]
+						},
+						"properties": {
+							"name": "Panihari",
+							"target": "Rajasthan",
+							"info": "About women fetching water from wells at long distances. Also concentrates on chance encounter between lovers and contentious relationship between the mother-in-law and daughter-in-law.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [407,693.72]
+						},
+						"properties": {
+							"name": "Ovi",
+							"target": ["Maharastra","Goa"],
+							"info": "Usually sung by women during their leisure time between household work and it generally contain 4 small lines of poetry. Both in Maharastra and Goa.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [548,895.66]
+						},
+						"properties": {
+							"name": "Pai song",
+							"target": "Madhya Pradesh",
+							"info": "Sung during festivals that fall during the rainy season. Generally plead for for a good monsoon and a good harvest, as these are songs of the farmer community. Generally accompanied by 'Saria dance'.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [407,693.72]
+						},
+						"properties": {
+							"name": "Lavani",
+							"target": "Maharastra",
+							"info": "Both dance form and genre of music. Performed usally on beats of 'Dholki'.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [318,1093.77]
+						},
+						"properties": {
+							"name": "Maand",
+							"target": "Rajasthan",
+							"info": "Usually about the bards singing the glory of the Rajput rulers. The famous song 'Kesariya Balam' is in Maand style. considered close to Thumri or Ghazal.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [191,890.83]
+						},
+						"properties": {
+							"name": "Dandiya",
+							"target": "Gujarat",
+							"info": "Both folk dance and music. Several forms of raas like Dandiya Rass and Garba Rass. In Dandiya Rass, men and women dance in two circles with sticks in their hands.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [407,693.72]
+						},
+						"properties": {
+							"name": "Powada",
+							"target": "Maharastra",
+							"info": "Usually ballads sung for the heros of past like Shivaji.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1314,1005.47]
+						},
+						"properties": {
+							"name": "Khongjom Parba",
+							"target": "Manipur",
+							"info": "Musical narration of the battle of Khongjom fought between the British army and the Manipuri resistance forces in 1891.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [401,377.55]
+						},
+						"properties": {
+							"name": "Bhavageete",
+							"target": ["Karnataka","Maharastra"],
+							"info": "Sung on slower pitch and Usually composed on themes arounf nature, love and philosophy. Very popular in Karantaka and Maharastra.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [308.5,464.86]
+						},
+						"properties": {
+							"name": "Mando",
+							"target": "Goa",
+							"info": "Unique blend of Indian and Western musical traditions.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [576,437.58]
+						},
+						"properties": {
+							"name": "Kolannalu (or Kolattam)",
+							"target": "Andhra Pradesh",
+							"info": "Simillar to Dandiya or 'stick dance'. Dancers generally move in 2 circles.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [932,1031.73]
+						},
+						"properties": {
+							"name": "Sohar",
+							"target": "Bihar",
+							"info": "Sung during childbirth.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1241,1103.52]
+						},
+						"properties": {
+							"name": "Zikir",
+							"target": "Assam",
+							"info": "Embodies the teaching of Islam.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1324,1224.09]
+						},
+						"properties": {
+							"name": "Ja-jin-ja",
+							"target": "Arunachal Pradesh",
+							"info": "Sung during marriages.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1324,1224.09]
+						},
+						"properties": {
+							"name": "Nyioga",
+							"target": "Arunachal Pradesh",
+							"info": "Sung at the end of the marriage ceremony.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1338,1097.54]
+						},
+						"properties": {
+							"name": "Heliamleu, Hereileu, Hekaileu, Neuleu",
+							"target": "Nagaland",
+							"info": "'Heliamleu' - dancing songs, 'Hereileu' - war songs, 'Hekaileu' - Songs about oneself, 'Neuleu' - about lengends and myths. ",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [401,377.55]
+						},
+						"properties": {
+							"name": "Dollu Kunitha (Drum Dance)",
+							"target": "Karnataka",
+							"info": "Performed by 'Kuruba Community'. 'Dollu' is a percussion instrument. ",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [534,211.41]
+						},
+						"properties": {
+							"name": "Naattupura-paattu",
+							"target": "Tamil Nadu",
+							"info": "Consists of village and city folk music.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [863,751.75]
+						},
+						"properties": {
+							"name": "Pala and Daskathia",
+							"target": "Odisha",
+							"info": "Ballads of religious nature.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [404,1319.89]
+						},
+						"properties": {
+							"name": "Manganiars",
+							"target": "Punjab",
+							"info": "Sung in North-West India. Songs of Alexander, local kings and battles.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [404,1319.89]
+						},
+						"properties": {
+							"name": "Dhadi",
+							"target": "Punjab",
+							"info": "Sing ballads of bravery.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [588,1275.87]
+						},
+						"properties": {
+							"name": "Basant Geet",
+							"target": "Uttrakhand",
+							"info": "During Basant Panchami festival.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [534,211.41]
+						},
+						"properties": {
+							"name": "Villu Pattu",
+							"target": "Tamil Nadu",
+							"info": "Religious - conquest of good over evil.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [932,1031.73]
+						},
+						"properties": {
+							"name": "Sukar ke Biah",
+							"target": "Bihar",
+							"info": "Celebrating love between cosmological deities - Shukra and Brihaspati.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1267.5,903.41]
+						},
+						"properties": {
+							"name": "Saikuti Zai",
+							"target": "Mizoram",
+							"info": "Praise of brave men, hunters etc.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1314,1005.47]
+						},
+						"properties": {
+							"name": "Lai Haraoba Ishei",
+							"target": "Manipur",
+							"info": "Sung by 'Meitei people' during Lai Haraoba festival and is related to religion 'Sanamahism'.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [401,377.55]
+						},
+						"properties": {
+							"name": "Veeragase",
+							"target": "Karnataka",
+							"info": "During Dusshera procession.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [392,1479.97]
+						},
+						"properties": {
+							"name": "Chhakri",
+							"target": "Jammu and Kashmir",
+							"info": "Fairy tales and love stories.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [436,187.4]
+						},
+						"properties": {
+							"name": "Bhuta Song",
+							"target": "Kerala",
+							"info": "Songs against evils and ghosts",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1314,1005.47]
+						},
+						"properties": {
+							"name": "Khubakeshei",
+							"target": "Manipur",
+							"info": "Acoompanied by clapping.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1241,1103.52]
+						},
+						"properties": {
+							"name": "Jhumair",
+							"target": "Assam",
+							"info": "Quite famous among tea-tribes of Assam. Also in other Eastern states.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [1241,1103.52]
+						},
+						"properties": {
+							"name": "Borgeet",
+							"target": "Assam",
+							"info": "Initially composed by 'Sankardeva' and 'Mahadeva' and is associated with Ekasarana Dharma.",
+						},
+					},
+					{
+						"type":"Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [490,1383.93]
+						},
+						"properties": {
+							"name": "Jhoori",
+							"target": "Himachal Pradesh",
+							"info": "Celebrates extra-marital romance.",
+						},
+					},
+			    ]
+			};
+
+
+			let out = geojsonFeature.features.reduce((acc, {properties}) =>
+			{
+			    Object.entries(properties).forEach(([key, val]) =>
+			    {
+			        acc[key] = acc[key] || new Array();
+			        acc[key].push(val);
+			    });
+
+			    return acc;
+			}, {});
+
+			let out_2 = geojsonFeature.features.reduce((acc, {geometry}) =>
+			{
+			    Object.entries(geometry).forEach(([key, val]) =>
+			    {
+			        acc[key] = acc[key] || new Array();
+			        acc[key].push(val);
+			    });
+
+			    return acc;
+			}, {});
+
+			var geojsonMarkerOptions = {
+			    radius: 8,
+			    fillColor: "orange",
+			    color: "#000",
+			    weight: 1,
+			    opacity: 1,
+			    fillOpacity: 0.8
+			};
+
+			L.geoJSON(geojsonFeature, {
+			    onEachFeature: onEachFeatureFunction,
+			    pointToLayer: function (feature, latlng) {
+			        return L.circleMarker(latlng, geojsonMarkerOptions);
+			    }
+			});
+
+			var baseMaps = {
+				"Streets": image2,
+			};
+
+
+			map.panTo(new L.LatLng(Math.round(1734*0.5),Math.round(1486*0.5)));
+
+			// map.on("click", function(e){
+			// 	layerGroup.addLayer(new L.circleMarker([e.latlng.lat, e.latlng.lng],geojsonMarkerOptions));
+			// 	var place_name = prompt("Please enter the name", "");
+			// 	var place_target = prompt("Please enter the target", "");
+			// 	console.log("{\"type\":\"Feature\",\n\"geometry\": {\"type\": \"Point\",\"coordinates\": ["+Math.round(e.latlng.lng*100)/100+","+Math.round(e.latlng.lat*100)/100+"]},\n\"properties\": {\"name\": \""+place_name+"\",\n\"target\": \""+place_target+"\"}}");
+			// });
+
+
+			function shuffle(array) {
+			  var currentIndex = array.length, temporaryValue, randomIndex;
+			   // Fisher-Yates (aka Knuth) Shuffle
+			  // While there remain elements to shuffle...
+			  while (0 !== currentIndex) {
+
+			    // Pick a remaining element...
+			    randomIndex = Math.floor(Math.random() * currentIndex);
+			    currentIndex -= 1;
+
+			    // And swap it with the current element.
+			    temporaryValue = array[currentIndex];
+			    array[currentIndex] = array[randomIndex];
+			    array[randomIndex] = temporaryValue;
+
+			  }
+
+			  return array;
+			};
+
+			$('#taptoplay').fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(200, function(){});
+
+			function blink_text(){
+			   $('#questiontext').fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(200, function() {
+					// $('#quesmark').addClass('blink_me');
+				});
+			};
+
+			function startTimer(){
+		  		timex = setTimeout(function(){
+	      		seconds++;
+			    if(seconds >59)
+			    	{
+		    			seconds=0;mins++;                
+					    if(mins<10)
+					    {                     
+					      $("#mins").text('0'+mins+':');
+					  	}       
+				       	else if(mins<=59)
+				       	{
+				       		$("#mins").text(mins+':')
+				       	}
+				       	else{
+				       		mins=0;
+				       		// Time limit exceed : Game Over : Genrate end signal
+				       	}
+	              	}    
+			    if(seconds <10) 
+			    {
+			      $("#seconds").text('0'+seconds);
+			  	} 
+		      	else 
+		      	{
+			      $("#seconds").text(seconds);
+			    }
+	      		startTimer();
+			  	},999);
+			};
+
+			var currentQuestion;
+			var shuffleoutput, questionList, targetList, questionListLength, originalQuestionList, infoList;
+			var correctTally, wrongAttempts, allwrongAttempts, num_attempts;
+			var hours,mins, seconds;
+			var error_marker;
+			var replayed =0;
+			var gametitle = "Folk Music of Indian States";
+			map.removeControl(map.zoomControl);
+			$('#questiontext').text(gametitle);
+
+			var correct_audio = new Audio('click_sound.mp3');
+			
+			function ask_question(currentQuestion,questionList,targetList){
+				let ques_text = questionList[currentQuestion];
+				if(typeof targetList[currentQuestion]!=='string'){
+						ques_text += " *";
+					}
+				return ques_text;
+			}
+
+			L.HtmlIcon = L.Icon.extend({
+							options: {
+								/*
+								html: (String) (required)
+								iconAnchor: (Point)
+								popupAnchor: (Point)
+								*/
+							},
+
+							initialize: function (options) {
+								L.Util.setOptions(this, options);
+							},
+
+							createIcon: function () {
+								var div = document.createElement('div');
+								div.innerHTML = this.options.html;
+								return div;
+							},
+
+							createShadow: function () {
+								return null;
+							}
+						});
+
+			const HTMLIcon = L.HtmlIcon.extend({
+			    options : {
+			        html : "<div class=\"map__marker\"></div>",
+			    }
+			});
+			const customHtmlIcon = new HTMLIcon();
+
+
+			function off() {
+				if (replayed===0){
+					map.addControl(map.zoomControl);
+					$(".Click-here").css('display','block');
+					layerGroup.addTo(map);
+					// L.control.layers(baseMaps, {
+					// 	"Cities": layerGroup.addTo(map)
+					// }).addTo(map);
+
+				}
+
+				currentQuestion=0;
+				originalQuestionList = Array.from(out["name"]);
+				tempcoordinatesList = Array.from(out_2["coordinates"]);
+				questionList = shuffle(originalQuestionList.slice());
+				var temptargetList = Array.from(out["target"]);
+				var tempinfoList = Array.from(out["info"]);
+				targetList = new Array(temptargetList.length);
+				infoList = new Array(tempinfoList.length);
+				corrdinateList = new Array(temptargetList.length);
+				for (let i = 0; i < questionList.length; i++) {
+				  var index = originalQuestionList.indexOf(questionList[i]);
+				  targetList[i]=temptargetList[index];
+				  corrdinateList[i]=tempcoordinatesList[index];
+				  infoList[i]=tempinfoList[index];
+				} 
+				// console.log(originalQuestionList,questionList);
+				// console.log(temptargetList,targetList);
+				questionListLength = questionList.length;
+				correctTally=0;
+				wrongAttempts=0;
+				allwrongAttempts=0;
+				num_attempts=0;
+				hours =0;
+				mins =0;
+				seconds =0;
+				$('#beginscene').fadeOut(250, function() {
+					$('#map').css('display','block');
+					let currentq = ask_question(currentQuestion,questionList,targetList);
+					$('#questiontext').text(currentq);
+					$('#questionarea').css('display','block');
+					$(".Click-here").text();
+					$('#attempts').fadeIn(100, function() {});	
+					$('#timer').fadeIn(100, function() {});	
+					blink_text();
+					startTimer();
+					// totlen = myQuiz.questionList.length;
+					// $('#score').text('0 / '+totlen);
+				});
+			}
+
+			function onEachFeatureFunction(feature,layer) {
+				layerGroup.addLayer(layer);
+				layer.on('click', function (e) {					
+					var choice = feature.properties.target;
+					var coordinates = corrdinateList[currentQuestion];
+					if(typeof choice !== 'string'){
+						choice = choice[0];
+					}
+					num_attempts = num_attempts+1;
+					$('#numattempts').text("Attempts = "+(num_attempts));
+					var check_answer=false;
+					console.log(choice,targetList[currentQuestion]);
+					if(typeof targetList[currentQuestion]==='string'){
+						check_answer = (choice === targetList[currentQuestion]);
+					}
+					else{
+						check_answer = targetList[currentQuestion].includes(choice);
+					}
+					try {
+				  		layerGroup.removeLayer(error_marker);
+					}
+					catch(err) {
+				  		//not present
+					}
+					if (check_answer){
+						correct_audio.play();
+						currentQuestion++;
+						correctTally++;
+						wrongAttempts=0;
+						if (currentQuestion < questionListLength){
+							let nextq = ask_question(currentQuestion,questionList,targetList);
+							$('#questiontext').text(nextq);
+							blink_text();
+						}
+						else{
+								setTimeout(function(){
+									// $('#questionarea').css('display','none');
+									$('#timer').css('display','none');
+									$('#attempts').css('display','none');
+									$('#totquestions').html("<b>#Questions = </b> " + questionListLength);
+									$('#score').html("<b>#Attempts = </b> " + (num_attempts));
+									$('#accuracy').html("<b>Accuracy = </b> " + Math.round((questionListLength/num_attempts)*10000)/100+"%");
+									$('#duration').html("<b>Duration = </b> " + mins +"m "+ seconds+"s");
+									$('#gameover').fadeIn(250, function() {
+										//do something
+									});
+									clearTimeout(timex);
+									$('#questiontext').html('Game Over!');
+									$("#reload").click(function(){
+										replayed++;
+										num_attempts = 0;
+										hours =0;
+										mins =0;
+										seconds =0;
+										$('#numattempts').text("Attempts = "+(num_attempts));
+										$("#mins").text('0'+mins+':');
+										$("#seconds").text('0'+seconds);
+										$('#questiontext').text(gametitle);
+										$('#beginscene').fadeIn(200, function() {
+											$('#gameover').fadeOut(100, function() {
+												
+											});
+										});
+										$('#questionarea').css('display','none');
+									}); 
+								}, 250);
+							}
+					}
+					else{
+							$("#questiontext").css("color", "red");
+							setTimeout(function(){
+						  		$("#questiontext").css("color", "black");
+						  		setTimeout(function(){
+							  		$("#questiontext").css("color", "red");
+							  		setTimeout(function(){
+								  		$("#questiontext").css("color", "black");
+									}, 100);
+								}, 100);
+							}, 100);
+							wrongAttempts++;
+							allwrongAttempts++;
+							if (wrongAttempts>=2){
+								error_marker = new L.Marker(new L.LatLng(coordinates[1],coordinates[0]), {icon: customHtmlIcon});
+								error_marker.setZIndexOffset(-100);
+								layerGroup.addLayer(error_marker);
+								console.log('added');
+								setTimeout(function(){
+								  		layerGroup.removeLayer(error_marker);
+								  		console.log('removed');
+									}, 4000);
+							}
+						}
+			    });
+			};
+
+			$(".Click-here").on('click', function() {
+			  $(".custom-model-main").addClass('model-open');
+			  var current_info = infoList[currentQuestion];
+			  $(".pop-up-content-wrap").text(current_info);
+
+			}); 
+			$(".close-btn, .bg-overlay").click(function(){
+			  $(".custom-model-main").removeClass('model-open');
+			});
+
+		</script>
+	</body>
+</html>
